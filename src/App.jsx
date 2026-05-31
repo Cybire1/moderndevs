@@ -252,6 +252,19 @@ export default function App() {
           </Enter>
         </section>
 
+        <Reveal>
+          <div className="intro">
+            <img src="/cyber.jpg" alt="Cyber" className="intro-photo"
+              width="76" height="76" loading="lazy" />
+            <div>
+              <div className="intro-name">Hi, I'm Cyber.</div>
+              <p className="intro-text">
+                I'll be teaching this. Ask me anything — that's the point.
+              </p>
+            </div>
+          </div>
+        </Reveal>
+
         <section className="section">
           <Reveal><div className="sec-label">Here's the plan</div></Reveal>
           {PLAN.map((p, i) => (

@@ -119,6 +119,34 @@ button { font-family: inherit; }
 .cta:hover:not(:disabled) .arr { transform: translateX(4px); }
 .cta-note { font-size: 13px; color: var(--faint); }
 
+/* intro */
+.intro {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 30px 0 6px;
+}
+.intro-photo {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px -6px rgba(26, 23, 20, 0.35);
+}
+.intro-name {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.intro-text {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--muted);
+  margin: 4px 0 0;
+  max-width: 320px;
+}
+
 /* sections */
 .section { padding: 30px 0 6px; }
 .sec-label {
