@@ -47,7 +47,7 @@ button { font-family: inherit; }
   background-size: 180px 180px;
 }
 
-/* entrance — transform only, never hides content */
+/* entrance: transform only, never hides content */
 .enter { opacity: 1; transform: none; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
 .enter.pre { transform: translateY(16px); }
 
@@ -174,7 +174,7 @@ button { font-family: inherit; }
   .aside-text { font-size: 15px; max-width: 260px; }
 }
 
-/* sections — cap at hero-copy-column width on desktop so they don't go sparse */
+/* sections: cap at hero-copy-column width on desktop so they don't go sparse */
 @media (min-width: 720px) {
   .section, .form-card-wrap { max-width: 580px; }
 }

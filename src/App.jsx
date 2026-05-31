@@ -4,13 +4,13 @@ import { Enter, Reveal, Magnetic, AnimatedCheck, useInView } from './fx.jsx';
 const ACCENT = '#C0492B';
 const TOTAL_SEATS = 40;
 const INITIAL_TAKEN = 27;
-// Same-origin /api/* routes — handled by the Vercel functions in /api during
+// Same-origin /api/* routes, handled by the Vercel functions in /api during
 // `vercel dev` and once deployed. `npm run dev` (Vite alone) doesn't serve
 // /api, so locally use `vercel dev` to exercise the form end-to-end.
 
 const PLAN = [
   { n: '01', t: 'We start from nothing', d: "Never written a line of code? Good. That's exactly who I made this for." },
-  { n: '02', t: 'AI is your pair', d: "You'll code with Claude next to you — asking, editing, shipping. Then we make a little robot do something fun." },
+  { n: '02', t: 'AI is your pair', d: "You'll code with Claude next to you, asking, editing, shipping. Then we make a little robot do something fun." },
   { n: '03', t: "You're never stuck alone", d: "It's a small group. Ask me anything. We go at your pace, not mine." },
 ];
 
@@ -183,7 +183,7 @@ export default function App() {
         }),
       });
       if (res.status === 409) {
-        setSubmitError("You're already on the list — check your email for the invite.");
+        setSubmitError("You're already on the list. Check your email for the invite.");
         return;
       }
       if (!res.ok) throw new Error(`Submit failed (${res.status})`);
@@ -207,7 +207,7 @@ export default function App() {
       <div className="grain" />
 
       <header className="masthead">
-        <a className="brand" href="/" aria-label="The Modern_dev — home">
+        <a className="brand" href="/" aria-label="The Modern_dev · home">
           <Logo accent={accent} />
           <span className="mark">The Modern<span style={{ color: accent }}>_</span>dev</span>
         </a>
@@ -232,7 +232,7 @@ export default function App() {
             </Enter>
             <Enter delay={140}>
               <p className="lede">
-                I teach a small, hands-on class — code with AI as your pair,
+                I teach a small, hands-on class. Code with AI as your pair,
                 and we'll bring a little robot along for the ride. No experience needed.
               </p>
             </Enter>
@@ -259,7 +259,7 @@ export default function App() {
             <div className="aside-body">
               <div className="aside-name">Hi, I'm Cyber.</div>
               <p className="aside-text">
-                I'll be teaching this. Ask me anything — that's the point.
+                I'll be teaching this. Ask me anything. That's the point.
               </p>
             </div>
           </Reveal>
@@ -335,7 +335,7 @@ export default function App() {
                   I'll {form.tg ? 'add you to the Telegram group' : 'email you the Telegram invite'} with
                   the date and what to bring (nothing, really), {form.name.split(' ')[0]}. Can't wait to build with you.
                 </p>
-                <div className="sign">— Cyber</div>
+                <div className="sign">Cyber</div>
               </div>
             )}
           </Reveal>
