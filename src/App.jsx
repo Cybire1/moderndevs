@@ -72,6 +72,94 @@ function Logo({ accent }) {
   );
 }
 
+function Mission({ accent }) {
+  return (
+    <section className="mission" id="mission">
+      <Reveal><div className="sec-label">Why this exists</div></Reveal>
+      <Reveal delay={50}>
+        <p className="mission-text">
+          Coding got gatekept by intimidation for too long. This class is{' '}
+          <span className="underline-wrap">
+            the opposite
+            <Marker accent={accent} />
+          </span>.
+        </p>
+      </Reveal>
+      <Reveal delay={110}>
+        <p className="mission-sub">
+          If you've been told it's not for you, start here.
+        </p>
+      </Reveal>
+    </section>
+  );
+}
+
+const FAQ_DATA = [
+  {
+    q: "Do I really need zero coding experience?",
+    a: "Yes. The class is built for people who've never written a line of code. We start at \"what is a file\" and go from there. If you can use a browser, you can do this.",
+  },
+  {
+    q: "What gear do I need? Do I need a Reachy Mini?",
+    a: "A laptop. That's it. The Reachy is mine — you'll write code that runs on it during the live sessions. You don't need to own one.",
+  },
+  {
+    q: "How much time per week?",
+    a: "About 3 hours. One live session (around 90 minutes) plus a bit of async work during the week — whenever you feel like it.",
+  },
+  {
+    q: "What if I miss a live session?",
+    a: "Sessions are recorded and shared in the group. You can ask anything async — I'm there during the week, not just on Sundays.",
+  },
+  {
+    q: "What happens after the 4 weeks?",
+    a: "You keep the work, the recordings, and the group chat. I run cohorts a few times a year — you're welcome back any time.",
+  },
+  {
+    q: "Why is it free? What's the catch?",
+    a: "There isn't one. I have a day job. I think more people should be able to code. So I teach.",
+  },
+];
+
+function FAQItem({ q, a, open, onToggle }) {
+  return (
+    <div className="faq-item" data-open={open}>
+      <button
+        type="button"
+        className="faq-q"
+        onClick={onToggle}
+        aria-expanded={open}
+      >
+        <span>{q}</span>
+        <span className="faq-chevron-wrap"><IconChevronDown /></span>
+      </button>
+      <div className="faq-a">
+        <div className="faq-a-inner">{a}</div>
+      </div>
+    </div>
+  );
+}
+
+function FAQ() {
+  const [openIdx, setOpenIdx] = useState(null);
+  return (
+    <section className="section faq-section" id="faq">
+      <Reveal><div className="sec-label">Common questions</div></Reveal>
+      <div className="faq">
+        {FAQ_DATA.map((f, i) => (
+          <Reveal key={i} delay={i * 35}>
+            <FAQItem
+              {...f}
+              open={openIdx === i}
+              onToggle={() => setOpenIdx(openIdx === i ? null : i)}
+            />
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
 function Curriculum() {
@@ -376,6 +464,8 @@ export default function App() {
           </Reveal>
         </div>
 
+        <Mission accent={accent} />
+
         <Schedule accent={accent} />
 
         <Curriculum />
@@ -383,6 +473,8 @@ export default function App() {
         <Reveal className="section">
           <Seats accent={accent} taken={taken} total={TOTAL_SEATS} pct={pct} left={seatsLeft} />
         </Reveal>
+
+        <FAQ />
 
         <Reveal className="cta-bottom">
           <button

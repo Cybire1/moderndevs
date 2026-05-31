@@ -190,6 +190,104 @@ button { font-family: inherit; }
 
 .section { padding: 30px 0 6px; }
 
+/* mission */
+.mission {
+  padding: 32px 0 4px;
+  max-width: 580px;
+}
+.mission-text {
+  font-size: 22px;
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 10px 0 8px;
+  max-width: 520px;
+  text-wrap: balance;
+}
+.mission-sub {
+  font-size: 16px;
+  color: var(--muted);
+  margin: 0;
+  max-width: 480px;
+}
+@media (min-width: 720px) {
+  .mission-text { font-size: 26px; }
+}
+
+/* faq */
+.faq-section { padding-bottom: 0; max-width: 580px; }
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color .25s, box-shadow .25s, transform .25s;
+}
+.faq-item:hover { transform: translateY(-1px); }
+.faq-item[data-open="true"] {
+  border-color: rgba(192, 73, 43, 0.35);
+  box-shadow: 0 6px 18px -12px rgba(192, 73, 43, 0.25);
+}
+.faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-align: left;
+  line-height: 1.4;
+  transition: color .2s;
+}
+.faq-q:hover { color: var(--accent); }
+.faq-chevron-wrap {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(26, 23, 20, 0.04);
+  color: var(--muted);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform .4s cubic-bezier(.2,.8,.2,1), background .25s, color .25s;
+}
+.faq-item[data-open="true"] .faq-chevron-wrap {
+  transform: rotate(180deg);
+  background: rgba(192, 73, 43, 0.12);
+  color: var(--accent);
+}
+.faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .4s cubic-bezier(.2,.8,.2,1);
+}
+.faq-item[data-open="true"] .faq-a {
+  grid-template-rows: 1fr;
+}
+.faq-a-inner {
+  overflow: hidden;
+  padding: 0 18px 16px;
+  font-size: 14.8px;
+  line-height: 1.55;
+  color: #5C554A;
+}
+
 /* schedule */
 .schedule {
   padding: 30px 0 6px;
