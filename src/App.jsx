@@ -1,17 +1,49 @@
 import { useEffect, useState } from 'react';
 import { Enter, Reveal, Magnetic, AnimatedCheck, useInView } from './fx.jsx';
+import {
+  IconCalendar, IconClock, IconUsers, IconSparkle, IconRobot, IconBolt,
+  IconChat, IconCode, IconArrowRight, IconChevronDown, IconCheck, IconHeart,
+} from './icons.jsx';
 
 const ACCENT = '#C0492B';
 const TOTAL_SEATS = 40;
 const BASELINE_TAKEN = 15;
+
+// PLACEHOLDER — edit when the real cohort date is set.
+const COHORT_DATE = new Date('2026-07-20T19:00:00Z');
+const COHORT_WEEKS = 4;
+const COHORT_HOURS_PER_WEEK = 3;
+const COHORT_CADENCE = 'Sundays 7pm UTC';
 // Same-origin /api/* routes, handled by the Vercel functions in /api during
 // `vercel dev` and once deployed. `npm run dev` (Vite alone) doesn't serve
 // /api, so locally use `vercel dev` to exercise the form end-to-end.
 
-const PLAN = [
-  { n: '01', t: 'We start from nothing', d: "Never written a line of code? Good. That's exactly who I made this for." },
-  { n: '02', t: 'AI is your pair', d: "You'll code with Claude next to you, asking, editing, shipping. Then we make a little robot do something fun." },
-  { n: '03', t: "You're never stuck alone", d: "It's a small group. Ask me anything. We go at your pace, not mine." },
+// EDIT to refine — these are the four weeks of the cohort.
+const CURRICULUM = [
+  {
+    n: 1, Icon: IconCode,
+    t: 'First lines, first ship',
+    s: 'Your first webpage, live on the internet.',
+    d: "We set up your tools, you write your first lines with Claude, and we deploy it before the session ends.",
+  },
+  {
+    n: 2, Icon: IconSparkle,
+    t: 'AI is your pair',
+    s: 'A tiny script that does something useful for you.',
+    d: "How to talk to Claude. Ask, edit, debug. Build a small tool that automates a chore you actually have.",
+  },
+  {
+    n: 3, Icon: IconRobot,
+    t: 'Make the robot move',
+    s: 'Code that makes Reachy wave, react, dance.',
+    d: "We bring out the Reachy Mini. You write the code that makes it move. The robot does what you say.",
+  },
+  {
+    n: 4, Icon: IconBolt,
+    t: 'Build something yours',
+    s: 'A small project of your own, end to end.',
+    d: "Pick a thing you wish existed. Pitch it Tuesday, ship it Sunday. We're in your corner all week.",
+  },
 ];
 
 const validEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
@@ -37,6 +69,86 @@ function Logo({ accent }) {
       <path d="M3 20 C 9 16.5, 21 16.5, 27 20" fill="none"
         stroke={accent} strokeWidth="2.6" strokeLinecap="round" />
     </svg>
+  );
+}
+
+const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+function Curriculum() {
+  return (
+    <section className="section curriculum-section" id="curriculum">
+      <Reveal><div className="sec-label">What you'll learn</div></Reveal>
+      <div className="curriculum">
+        {CURRICULUM.map((c, i) => {
+          const Icon = c.Icon;
+          return (
+            <Reveal key={c.n} delay={i * 60}>
+              <article className="cur-card">
+                <div className="cur-side">
+                  <div className="cur-num">WEEK {c.n}</div>
+                  <div className="cur-icon"><Icon /></div>
+                </div>
+                <div className="cur-body">
+                  <h3 className="cur-title">{c.t}</h3>
+                  <div className="cur-ship">
+                    <span className="cur-ship-label">You'll ship</span>
+                    <span className="cur-ship-text">{c.s}</span>
+                  </div>
+                  <p className="cur-desc">{c.d}</p>
+                </div>
+              </article>
+            </Reveal>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Schedule({ accent }) {
+  const d = COHORT_DATE;
+  const daysAway = Math.max(0, Math.ceil((d.getTime() - Date.now()) / 86400000));
+  return (
+    <section className="schedule" id="schedule">
+      <Reveal><div className="sec-label">Next cohort</div></Reveal>
+      <Reveal delay={70}>
+        <div className="schedule-grid">
+          <div className="cal-tile" role="img"
+            aria-label={`Starts ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`}>
+            <span className="cal-strip" style={{ background: accent }} />
+            <div className="cal-month">{MONTHS[d.getUTCMonth()]}</div>
+            <div className="cal-day">{d.getUTCDate()}</div>
+            <div className="cal-year">{d.getUTCFullYear()}</div>
+            {daysAway > 0 && (
+              <div className="cal-away">in {daysAway} {daysAway === 1 ? 'day' : 'days'}</div>
+            )}
+          </div>
+          <div className="schedule-info">
+            <div className="info-card">
+              <span className="info-icon"><IconClock /></span>
+              <div className="info-body">
+                <div className="info-top">{COHORT_WEEKS} weeks</div>
+                <div className="info-sub">~{COHORT_HOURS_PER_WEEK} hours per week</div>
+              </div>
+            </div>
+            <div className="info-card">
+              <span className="info-icon"><IconCalendar /></span>
+              <div className="info-body">
+                <div className="info-top">{COHORT_CADENCE}</div>
+                <div className="info-sub">live session + async during the week</div>
+              </div>
+            </div>
+            <div className="info-card">
+              <span className="info-icon"><IconUsers /></span>
+              <div className="info-body">
+                <div className="info-top">{TOTAL_SEATS} seats max</div>
+                <div className="info-sub">small enough for everyone to ask</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </section>
   );
 }
 
@@ -264,20 +376,9 @@ export default function App() {
           </Reveal>
         </div>
 
-        <section className="section">
-          <Reveal><div className="sec-label">Here's the plan</div></Reveal>
-          {PLAN.map((p, i) => (
-            <Reveal key={p.n} delay={i * 70}>
-              <div className="plan-row" style={{ borderTop: i === 0 ? 'none' : '1px solid var(--line)' }}>
-                <span className="plan-no">{p.n}</span>
-                <div>
-                  <div className="plan-t">{p.t}</div>
-                  <div className="plan-d">{p.d}</div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </section>
+        <Schedule accent={accent} />
+
+        <Curriculum />
 
         <Reveal className="section">
           <Seats accent={accent} taken={taken} total={TOTAL_SEATS} pct={pct} left={seatsLeft} />
