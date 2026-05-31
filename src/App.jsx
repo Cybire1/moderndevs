@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Enter, Reveal, Magnetic, AnimatedCheck, useInView } from './fx.jsx';
 
 const ACCENT = '#C0492B';
 const TOTAL_SEATS = 40;
-const INITIAL_TAKEN = 27;
+const BASELINE_TAKEN = 15;
 // Same-origin /api/* routes, handled by the Vercel functions in /api during
 // `vercel dev` and once deployed. `npm run dev` (Vite alone) doesn't serve
 // /api, so locally use `vercel dev` to exercise the form end-to-end.
@@ -107,54 +107,52 @@ export default function App() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
-  const [taken, setTaken] = useState(INITIAL_TAKEN);
+  const [taken, setTaken] = useState(BASELINE_TAKEN);
   const [seatNo, setSeatNo] = useState(null);
   const [submitError, setSubmitError] = useState(null);
-  const formRef = useRef(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => { document.documentElement.style.setProperty('--accent', accent); }, [accent]);
 
-  // Real seat count from /api/signup-count, polled every 30s. Falls back to
-  // the demo theater (setInterval bump) when the endpoint isn't reachable.
+  // Modal: body scroll lock, Esc to close, focus first field on open.
+  useEffect(() => {
+    if (!modalOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') setModalOpen(false); };
+    window.addEventListener('keydown', onKey);
+    const focusTimer = setTimeout(() => {
+      document.querySelector('.modal-card .fl-input')?.focus();
+    }, 60);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+      clearTimeout(focusTimer);
+    };
+  }, [modalOpen]);
+
+  // Real seat count from /api/signup-count, polled every 30s.
   useEffect(() => {
     let cancelled = false;
-    let demoTimer = null;
-    let pollTimer = null;
-    const startDemo = () => {
-      if (done || demoTimer) return;
-      demoTimer = setInterval(
-        () => setTaken((c) => (c < TOTAL_SEATS - 4 && Math.random() < 0.4 ? c + 1 : c)),
-        11000,
-      );
-    };
     const fetchCount = async () => {
       try {
         const res = await fetch('/api/signup-count');
-        if (!res.ok) throw new Error(`status ${res.status}`);
+        if (!res.ok) return;
         const { count } = await res.json();
-        if (!cancelled && typeof count === 'number') {
-          setTaken(INITIAL_TAKEN + count);
-        }
-      } catch {
-        startDemo();
-      }
+        if (!cancelled && typeof count === 'number') setTaken(BASELINE_TAKEN + count);
+      } catch {}
     };
     fetchCount();
-    pollTimer = setInterval(fetchCount, 30000);
-    return () => {
-      cancelled = true;
-      if (pollTimer) clearInterval(pollTimer);
-      if (demoTimer) clearInterval(demoTimer);
-    };
-  }, [done]);
+    const id = setInterval(fetchCount, 30000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
 
   const update = (f, v) => {
     setForm((s) => ({ ...s, [f]: v }));
     if (errors[f]) setErrors((e) => ({ ...e, [f]: null }));
   };
-  const scrollToForm = () => {
-    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
 
   async function submit(e) {
     e.preventDefault();
@@ -243,7 +241,7 @@ export default function App() {
                     type="button"
                     className="cta"
                     style={{ background: accent }}
-                    onClick={scrollToForm}
+                    onClick={openModal}
                   >
                     Save me a seat <span className="arr">→</span>
                   </button>
@@ -254,8 +252,9 @@ export default function App() {
           </section>
 
           <Reveal as="aside" className="hero-aside" y={12}>
-            <img src="/cyber.jpg" alt="Cyber" className="aside-photo"
-              width="120" height="120" loading="lazy" />
+            <div className="aside-photo">
+              <img src="/cyber.jpg" alt="Cyber" loading="lazy" />
+            </div>
             <div className="aside-body">
               <div className="aside-name">Hi, I'm Cyber.</div>
               <p className="aside-text">
@@ -284,11 +283,45 @@ export default function App() {
           <Seats accent={accent} taken={taken} total={TOTAL_SEATS} pct={pct} left={seatsLeft} />
         </Reveal>
 
-        <div ref={formRef} className="form-card-wrap" style={{ scrollMarginTop: 24 }}>
-          <Reveal className="form-card">
+        <Reveal className="cta-bottom">
+          <button
+            type="button"
+            className="cta"
+            style={{ background: accent }}
+            onClick={openModal}
+          >
+            Save me a seat <span className="arr">→</span>
+          </button>
+          <span className="cta-note">takes 30 seconds</span>
+        </Reveal>
+      </main>
+
+      <footer className="footer">
+        <div className="foot-mark">The Modern<span style={{ color: accent }}>_</span>dev</div>
+        <div className="foot-handle">@the_modern_dev</div>
+      </footer>
+
+      {modalOpen && (
+        <div
+          className="modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="signup-modal-title"
+          onMouseDown={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+        >
+          <div className="modal-card">
+            <button
+              type="button"
+              className="modal-close"
+              aria-label="Close"
+              onClick={closeModal}
+            >
+              ×
+            </button>
+
             {!done ? (
               <form onSubmit={submit} noValidate>
-                <div className="form-title">Grab a seat</div>
+                <div id="signup-modal-title" className="form-title">Grab a seat</div>
                 <p className="form-sub">Tell me where to reach you. That's it.</p>
 
                 <input
@@ -329,7 +362,7 @@ export default function App() {
             ) : (
               <div className="success">
                 <AnimatedCheck accent={accent} size={58} />
-                <div className="success-title">Seat saved.</div>
+                <div id="signup-modal-title" className="success-title">Seat saved.</div>
                 <div className="success-sub">you're number {seatNo}</div>
                 <p className="success-text">
                   I'll {form.tg ? 'add you to the Telegram group' : 'email you the Telegram invite'} with
@@ -338,14 +371,9 @@ export default function App() {
                 <div className="sign">Cyber</div>
               </div>
             )}
-          </Reveal>
+          </div>
         </div>
-      </main>
-
-      <footer className="footer">
-        <div className="foot-mark">The Modern<span style={{ color: accent }}>_</span>dev</div>
-        <div className="foot-handle">@the_modern_dev</div>
-      </footer>
+      )}
     </div>
   );
 }

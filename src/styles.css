@@ -145,9 +145,17 @@ button { font-family: inherit; }
   width: 76px;
   height: 76px;
   border-radius: 50%;
-  object-fit: cover;
+  overflow: hidden;
   flex-shrink: 0;
   box-shadow: 0 4px 14px -6px rgba(26, 23, 20, 0.35);
+}
+.aside-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  transform: scale(1.22);
+  display: block;
 }
 .aside-body { display: flex; flex-direction: column; gap: 4px; }
 .aside-name {
@@ -170,17 +178,26 @@ button { font-family: inherit; }
     padding-top: 56px;
   }
   .aside-photo { width: 132px; height: 132px; }
+  .aside-photo img { object-position: center 20%; transform: scale(1.18); }
   .aside-name { font-size: 18.5px; }
   .aside-text { font-size: 15px; max-width: 260px; }
 }
 
 /* sections: cap at hero-copy-column width on desktop so they don't go sparse */
 @media (min-width: 720px) {
-  .section, .form-card-wrap { max-width: 580px; }
+  .section, .cta-bottom { max-width: 580px; }
 }
 
 .section { padding: 30px 0 6px; }
-.form-card-wrap { display: block; }
+
+/* bottom CTA — anchors the page now that the form is in a modal */
+.cta-bottom {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 34px 0 12px;
+}
 .sec-label {
   font-size: 11.5px; font-weight: 600; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
@@ -210,11 +227,7 @@ button { font-family: inherit; }
 }
 .seat-sub { font-size: 13px; color: var(--muted); margin-top: 10px; }
 
-/* form */
-.form-card {
-  margin: 30px 0 8px; padding: 26px 22px 24px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 22px;
-}
+/* form (used inside the modal) */
 .form-title { font-size: 27px; font-weight: 700; letter-spacing: -0.03em; }
 .form-sub { font-size: 15px; color: var(--muted); margin: 6px 0 22px; line-height: 1.4; }
 
@@ -288,6 +301,70 @@ button { font-family: inherit; }
 .ck-tick { stroke-dasharray: 44; stroke-dashoffset: 44; animation: draw-tick .4s cubic-bezier(.2, .8, .2, 1) .45s forwards; }
 @keyframes draw-ring { to { stroke-dashoffset: 0; } }
 @keyframes draw-tick { to { stroke-dashoffset: 0; } }
+
+/* modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(26, 23, 20, 0.45);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: backdrop-in 0.18s ease-out;
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 26px 22px 24px;
+  box-shadow: 0 30px 60px -20px rgba(26, 23, 20, 0.35);
+  animation: modal-in 0.22s cubic-bezier(.2, .8, .2, 1);
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(26, 23, 20, 0.06);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+.modal-close:hover {
+  background: rgba(26, 23, 20, 0.12);
+  color: var(--ink);
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal-card { animation: none; }
+  .modal-close:hover { transform: none; }
+}
 
 /* footer */
 .footer {
