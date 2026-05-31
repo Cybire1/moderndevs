@@ -27,10 +27,10 @@ export function useInView(opts = {}) {
   return [ref, inView];
 }
 
-export function Reveal({ children, delay = 0, y = 20, style = {}, className = '' }) {
+export function Reveal({ children, delay = 0, y = 20, style = {}, className = '', as: Tag = 'div' }) {
   const [ref, inView] = useInView();
   return (
-    <div
+    <Tag
       ref={ref}
       className={className}
       style={{
@@ -41,7 +41,7 @@ export function Reveal({ children, delay = 0, y = 20, style = {}, className = ''
       }}
     >
       {children}
-    </div>
+    </Tag>
   );
 }
 

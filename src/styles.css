@@ -32,7 +32,7 @@ button { font-family: inherit; }
 }
 
 @media (min-width: 720px) {
-  .page { padding: 56px 32px 60px; max-width: 620px; }
+  .page { padding: 56px 40px 60px; max-width: 880px; }
 }
 
 /* paper grain */
@@ -119,14 +119,29 @@ button { font-family: inherit; }
 .cta:hover:not(:disabled) .arr { transform: translateX(4px); }
 .cta-note { font-size: 13px; color: var(--faint); }
 
-/* intro */
-.intro {
+/* hero grid (single column on mobile, instructor sidebar on desktop) */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 720px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
+}
+
+/* instructor aside */
+.hero-aside {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 16px;
-  padding: 30px 0 6px;
+  padding: 10px 0 4px;
 }
-.intro-photo {
+.aside-photo {
   width: 76px;
   height: 76px;
   border-radius: 50%;
@@ -134,21 +149,38 @@ button { font-family: inherit; }
   flex-shrink: 0;
   box-shadow: 0 4px 14px -6px rgba(26, 23, 20, 0.35);
 }
-.intro-name {
+.aside-body { display: flex; flex-direction: column; gap: 4px; }
+.aside-name {
   font-size: 17px;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
-.intro-text {
-  font-size: 15px;
+.aside-text {
+  font-size: 14.5px;
   line-height: 1.45;
   color: var(--muted);
-  margin: 4px 0 0;
+  margin: 0;
   max-width: 320px;
 }
+@media (min-width: 720px) {
+  .hero-aside {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding-top: 56px;
+  }
+  .aside-photo { width: 132px; height: 132px; }
+  .aside-name { font-size: 18.5px; }
+  .aside-text { font-size: 15px; max-width: 260px; }
+}
 
-/* sections */
+/* sections — cap at hero-copy-column width on desktop so they don't go sparse */
+@media (min-width: 720px) {
+  .section, .form-card-wrap { max-width: 580px; }
+}
+
 .section { padding: 30px 0 6px; }
+.form-card-wrap { display: block; }
 .sec-label {
   font-size: 11.5px; font-weight: 600; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--muted); margin-bottom: 8px;

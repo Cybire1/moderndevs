@@ -215,55 +215,55 @@ export default function App() {
       </header>
 
       <main className="content">
-        <section className="hero">
-          <Enter>
-            <div className="kicker">FREE · LIVE COHORT · BEGINNERS WELCOME</div>
-          </Enter>
-          <Enter delay={70}>
-            <h1 className="h1">
-              Come build{' '}
-              <span className="underline-wrap">
-                robots&nbsp;&amp;&nbsp;AI
-                <Marker accent={accent} />
-              </span>{' '}
-              with me.
-            </h1>
-          </Enter>
-          <Enter delay={140}>
-            <p className="lede">
-              I teach a small, hands-on class — code with AI as your pair,
-              and we'll bring a little robot along for the ride. No experience needed.
-            </p>
-          </Enter>
-          <Enter delay={210}>
-            <div className="cta-row">
-              <Magnetic strength={0.25} style={{ display: 'inline-block' }}>
-                <button
-                  type="button"
-                  className="cta"
-                  style={{ background: accent }}
-                  onClick={scrollToForm}
-                >
-                  Save me a seat <span className="arr">→</span>
-                </button>
-              </Magnetic>
-              <span className="cta-note">takes 30 seconds</span>
-            </div>
-          </Enter>
-        </section>
+        <div className="hero-grid">
+          <section className="hero">
+            <Enter>
+              <div className="kicker">FREE · LIVE COHORT · BEGINNERS WELCOME</div>
+            </Enter>
+            <Enter delay={70}>
+              <h1 className="h1">
+                Come build{' '}
+                <span className="underline-wrap">
+                  robots&nbsp;&amp;&nbsp;AI
+                  <Marker accent={accent} />
+                </span>{' '}
+                with me.
+              </h1>
+            </Enter>
+            <Enter delay={140}>
+              <p className="lede">
+                I teach a small, hands-on class — code with AI as your pair,
+                and we'll bring a little robot along for the ride. No experience needed.
+              </p>
+            </Enter>
+            <Enter delay={210}>
+              <div className="cta-row">
+                <Magnetic strength={0.25} style={{ display: 'inline-block' }}>
+                  <button
+                    type="button"
+                    className="cta"
+                    style={{ background: accent }}
+                    onClick={scrollToForm}
+                  >
+                    Save me a seat <span className="arr">→</span>
+                  </button>
+                </Magnetic>
+                <span className="cta-note">takes 30 seconds</span>
+              </div>
+            </Enter>
+          </section>
 
-        <Reveal>
-          <div className="intro">
-            <img src="/cyber.jpg" alt="Cyber" className="intro-photo"
-              width="76" height="76" loading="lazy" />
-            <div>
-              <div className="intro-name">Hi, I'm Cyber.</div>
-              <p className="intro-text">
+          <Reveal as="aside" className="hero-aside" y={12}>
+            <img src="/cyber.jpg" alt="Cyber" className="aside-photo"
+              width="120" height="120" loading="lazy" />
+            <div className="aside-body">
+              <div className="aside-name">Hi, I'm Cyber.</div>
+              <p className="aside-text">
                 I'll be teaching this. Ask me anything — that's the point.
               </p>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
 
         <section className="section">
           <Reveal><div className="sec-label">Here's the plan</div></Reveal>
@@ -284,7 +284,7 @@ export default function App() {
           <Seats accent={accent} taken={taken} total={TOTAL_SEATS} pct={pct} left={seatsLeft} />
         </Reveal>
 
-        <div ref={formRef} style={{ scrollMarginTop: 24 }}>
+        <div ref={formRef} className="form-card-wrap" style={{ scrollMarginTop: 24 }}>
           <Reveal className="form-card">
             {!done ? (
               <form onSubmit={submit} noValidate>
