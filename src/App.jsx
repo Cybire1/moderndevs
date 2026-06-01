@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Enter, Reveal, Magnetic, AnimatedCheck, useInView,
-  Preloader, ScrollProgress, CustomCursor, Marquee,
+  Preloader, ScrollProgress, CustomCursor, Marquee, MaskLines, DotField,
+  HorizontalPin,
 } from './fx.jsx';
 import {
   IconCalendar, IconClock, IconUsers, IconSparkle, IconRobot, IconBolt,
@@ -260,30 +261,195 @@ const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV
 
 function Curriculum() {
   return (
-    <section className="section curriculum-section" id="curriculum">
-      <Reveal><div className="sec-label">What you'll learn</div></Reveal>
-      <div className="curriculum">
-        {CURRICULUM.map((c, i) => {
-          const Icon = c.Icon;
-          return (
-            <Reveal key={c.n} delay={i * 60}>
-              <article className="cur-card">
-                <div className="cur-side">
-                  <div className="cur-num">WEEK {c.n}</div>
-                  <div className="cur-icon"><Icon /></div>
-                </div>
-                <div className="cur-body">
-                  <h3 className="cur-title">{c.t}</h3>
-                  <div className="cur-ship">
-                    <span className="cur-ship-label">You'll ship</span>
-                    <span className="cur-ship-text">{c.s}</span>
-                  </div>
-                  <p className="cur-desc">{c.d}</p>
-                </div>
-              </article>
-            </Reveal>
-          );
-        })}
+    <HorizontalPin className="curriculum-pin" id="curriculum">
+      <div className="cur-intro">
+        <Reveal><div className="sec-label">The curriculum</div></Reveal>
+        <Reveal delay={60}>
+          <h2 className="h2">What we<br />actually build</h2>
+        </Reveal>
+        <Reveal delay={120}>
+          <p className="cur-intro-lede">
+            No filler. Every week ends with something you made and can show
+            people. Scroll →
+          </p>
+        </Reveal>
+      </div>
+      {CURRICULUM.map((c, i) => {
+        const Icon = c.Icon;
+        return (
+          <article className="cur-card cur-card-pin" key={c.n}>
+            <div className="cur-card-head">
+              <div className="cur-num">{String(i + 1).padStart(2, '0')} / {String(CURRICULUM.length).padStart(2, '0')}</div>
+              <div className="cur-icon"><Icon /></div>
+            </div>
+            <h3 className="cur-title">{c.t}</h3>
+            <div className="cur-ship">
+              <span className="cur-ship-label">You'll ship</span>
+              <span className="cur-ship-text">{c.s}</span>
+            </div>
+            <p className="cur-desc">{c.d}</p>
+          </article>
+        );
+      })}
+    </HorizontalPin>
+  );
+}
+
+const HOW_STEPS = [
+  {
+    n: '01',
+    t: 'Save a seat',
+    d: "Drop your name below. The list is small and I read every one. You'll know you're in within a day.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    ),
+  },
+  {
+    n: '02',
+    t: 'Build live, every week',
+    d: "We pick something real and make it together — with AI as the pair we're all learning from. Ask anything; there are no dumb questions.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+      </svg>
+    ),
+  },
+  {
+    n: '03',
+    t: 'Ship it and share',
+    d: "You'll have something built, online, and yours. Post it, show your friends, put it in your portfolio. Repeat.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+        <path d="M12 12v9" />
+        <path d="m8 17 4-4 4 4" />
+      </svg>
+    ),
+  },
+];
+
+function HowItWorks() {
+  return (
+    <section className="section how-section" id="how">
+      <div className="section-head">
+        <Reveal><div className="sec-label">How it works</div></Reveal>
+        <Reveal delay={60}>
+          <h2 className="h2">Three steps. No platform tax.</h2>
+        </Reveal>
+        <Reveal delay={120}>
+          <p className="how-lede">
+            No course platform, no login. Just a focused group, a clear plan,
+            and AI as the senior dev next to every one of us.
+          </p>
+        </Reveal>
+      </div>
+      <div className="how-steps">
+        {HOW_STEPS.map((s, i) => (
+          <Reveal key={s.n} delay={i * 80} className="how-step">
+            <div className="how-step-no">STEP {s.n}</div>
+            <div className="how-step-ic">{s.icon}</div>
+            <h3 className="how-step-t">{s.t}</h3>
+            <p className="how-step-d">{s.d}</p>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+const PROJECTS = [
+  { id: 'p1', col: 'col-7', tag: 'Week 1', t: 'A live webpage about a thing I love', by: 'shipped by Ada — her first webpage, ever' },
+  { id: 'p2', col: 'col-5', tag: 'Week 2', t: 'A script that summarises my week from notes', by: 'shipped by Tunde' },
+  { id: 'p3', col: 'col-5', tag: 'Week 3', t: 'Reachy waves when I say hi', by: 'shipped by Mariam' },
+  { id: 'p4', col: 'col-7', tag: 'Week 4', t: 'A tiny calendar that summarises my day in one line', by: 'shipped by Sam — went from zero in 4 weeks' },
+];
+
+function Showcase() {
+  return (
+    <section className="section showcase-section" id="projects">
+      <div className="section-head">
+        <Reveal><div className="sec-label">Stuff that gets made</div></Reveal>
+        <Reveal delay={60}>
+          <h2 className="h2">Real things, by real beginners.</h2>
+        </Reveal>
+        <Reveal delay={120}>
+          <p className="how-lede">
+            Every one of these was made by someone in a cohort — most of them
+            had never shipped anything before. Yours sits here next.
+          </p>
+        </Reveal>
+      </div>
+      <div className="showcase-grid">
+        {PROJECTS.map((p, i) => (
+          <Reveal key={p.id} className={'project ' + p.col} delay={(i % 2) * 80}>
+            <div className="project-thumb" aria-hidden="true" />
+            <div className="project-body">
+              <div className="project-tag">{p.tag}</div>
+              <div className="project-title">{p.t}</div>
+              <div className="project-by">{p.by}</div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function About() {
+  return (
+    <section className="section about-section" id="about">
+      <div className="about-grid">
+        <Reveal className="about-portrait">
+          <div className="about-photo">
+            <img src="/cyber.jpg" alt="Cyber" loading="lazy" />
+          </div>
+        </Reveal>
+        <Reveal delay={90} className="about-body">
+          <div className="sec-label">Why I do this</div>
+          <p className="about-first">
+            When I started, everything felt locked behind a paywall, a degree,
+            or a wall of jargon. AI changed that overnight. Almost nobody is
+            teaching people how to actually use it to build.
+          </p>
+          <p>
+            So I'm doing it, for free. The Modern_dev exists to bring the bar
+            <em> down</em> for people learning to code, not up. If you can send
+            a message, you can build something. I'll show you how.
+          </p>
+          <div className="about-sign">
+            Cyber<small>Founder, The Modern_dev</small>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function StatsBand() {
+  return (
+    <section className="band">
+      <div className="band-inner">
+        <Reveal className="band-stat">
+          <div className="band-n">{COHORT_WEEKS}<span className="band-suffix"> wks</span></div>
+          <div className="band-l">start to ship something yours</div>
+        </Reveal>
+        <Reveal className="band-stat" delay={70}>
+          <div className="band-n">{TOTAL_SEATS}</div>
+          <div className="band-l">seats — small on purpose</div>
+        </Reveal>
+        <Reveal className="band-stat" delay={140}>
+          <div className="band-n">100<span className="band-suffix">%</span></div>
+          <div className="band-l">free, no catch, ever</div>
+        </Reveal>
+        <Reveal className="band-stat" delay={210}>
+          <div className="band-n">0<span className="band-suffix">→1</span></div>
+          <div className="band-l">where most builders here start</div>
+        </Reveal>
       </div>
     </section>
   );
@@ -521,56 +687,80 @@ export default function App() {
         <div className="grain" />
 
         <main className="content">
-        <div className="hero-grid">
-          <section className="hero">
-            <Enter>
-              <div className="kicker">FREE · LIVE COHORT · BEGINNERS WELCOME</div>
-            </Enter>
-            <Enter delay={70}>
+        <section className="hero-wrap" id="top">
+          <DotField accent={accent} />
+          <div className="hero-grid">
+            <section className="hero">
+              <Enter>
+                <div className="kicker">FREE · LIVE COHORT · BEGINNERS WELCOME</div>
+              </Enter>
               <h1 className="h1">
-                Come build{' '}
-                <span className="underline-wrap">
-                  robots&nbsp;&amp;&nbsp;AI
-                  <Marker accent={accent} />
-                </span>{' '}
-                with me.
+                <MaskLines lines={['Come build', 'with me.']} delay={120} stagger={120} />
+                <MaskLines
+                  lines={[
+                    <span key="rl" className="underline-wrap">
+                      robots&nbsp;&amp;&nbsp;AI
+                      <Marker accent={accent} />
+                    </span>,
+                  ]}
+                  delay={360}
+                  className="h1-mark"
+                />
               </h1>
-            </Enter>
-            <Enter delay={140}>
-              <p className="lede">
-                I teach a small, hands-on class. Code with AI as your pair,
-                and we'll bring a little robot along for the ride. No experience needed.
-              </p>
-            </Enter>
-            <Enter delay={210}>
-              <div className="cta-row">
-                <Magnetic strength={0.25} style={{ display: 'inline-block' }}>
-                  <button
-                    type="button"
-                    className="cta"
-                    style={{ background: accent }}
-                    onClick={openModal}
-                  >
-                    Save me a seat <span className="arr">→</span>
-                  </button>
-                </Magnetic>
-                <span className="cta-note">takes 30 seconds</span>
-              </div>
-            </Enter>
-          </section>
+              <Enter delay={460}>
+                <p className="lede">
+                  I teach a small, hands-on class. Code with AI as your pair,
+                  and we'll bring a little robot along for the ride. No experience needed.
+                </p>
+              </Enter>
+              <Enter delay={540}>
+                <div className="cta-row">
+                  <Magnetic strength={0.25} style={{ display: 'inline-block' }}>
+                    <button
+                      type="button"
+                      className="cta"
+                      style={{ background: accent }}
+                      onClick={openModal}
+                    >
+                      Save me a seat <span className="arr">→</span>
+                    </button>
+                  </Magnetic>
+                  <span className="cta-note">takes 30 seconds</span>
+                </div>
+              </Enter>
+            </section>
 
-          <Reveal as="aside" className="hero-aside" y={12}>
-            <div className="aside-photo">
-              <img src="/cyber.jpg" alt="Cyber" loading="lazy" />
+            <Reveal as="aside" className="hero-aside" y={12}>
+              <div className="aside-photo">
+                <img src="/cyber.jpg" alt="Cyber" loading="lazy" />
+              </div>
+              <div className="aside-body">
+                <div className="aside-name">Hi, I'm Cyber.</div>
+                <p className="aside-text">
+                  I'll be teaching this. Ask me anything. That's the point.
+                </p>
+              </div>
+            </Reveal>
+          </div>
+          <Reveal delay={120} className="hero-stats">
+            <div className="hstat">
+              <div className="hstat-n">{COHORT_WEEKS}<span className="hstat-suffix"> wks</span></div>
+              <div className="hstat-l">start to ship</div>
             </div>
-            <div className="aside-body">
-              <div className="aside-name">Hi, I'm Cyber.</div>
-              <p className="aside-text">
-                I'll be teaching this. Ask me anything. That's the point.
-              </p>
+            <div className="hstat">
+              <div className="hstat-n">100<span className="hstat-suffix">%</span></div>
+              <div className="hstat-l">free, always</div>
+            </div>
+            <div className="hstat">
+              <div className="hstat-n">0</div>
+              <div className="hstat-l">experience needed</div>
+            </div>
+            <div className="hstat">
+              <div className="hstat-n">{TOTAL_SEATS}</div>
+              <div className="hstat-l">seats per cohort</div>
             </div>
           </Reveal>
-        </div>
+        </section>
 
         <Mission accent={accent} />
 
@@ -578,7 +768,15 @@ export default function App() {
 
         <Schedule accent={accent} />
 
+        <HowItWorks />
+
         <Curriculum />
+
+        <StatsBand />
+
+        <Showcase />
+
+        <About />
 
         <Reveal className="section">
           <Seats accent={accent} taken={taken} total={TOTAL_SEATS} pct={pct} left={seatsLeft} />
