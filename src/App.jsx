@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Enter, Reveal, Magnetic, AnimatedCheck, useInView } from './fx.jsx';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Enter, Reveal, Magnetic, AnimatedCheck, useInView,
+  Preloader, ScrollProgress, CustomCursor, Marquee,
+} from './fx.jsx';
 import {
   IconCalendar, IconClock, IconUsers, IconSparkle, IconRobot, IconBolt,
   IconChat, IconCode, IconArrowRight, IconChevronDown, IconCheck, IconHeart,
@@ -14,6 +17,17 @@ const COHORT_DATE = new Date('2026-07-20T19:00:00Z');
 const COHORT_WEEKS = 4;
 const COHORT_HOURS_PER_WEEK = 3;
 const COHORT_CADENCE = 'Sundays 7pm UTC';
+
+const MARQUEE_ITEMS = [
+  'Code with AI',
+  'Make a robot wave',
+  'Beginners welcome',
+  'No experience needed',
+  'Ship something real',
+  'Pair with Claude',
+  'Small cohort',
+  'Always free',
+];
 // Same-origin /api/* routes, handled by the Vercel functions in /api during
 // `vercel dev` and once deployed. `npm run dev` (Vite alone) doesn't serve
 // /api, so locally use `vercel dev` to exercise the form end-to-end.
@@ -69,6 +83,88 @@ function Logo({ accent }) {
       <path d="M3 20 C 9 16.5, 21 16.5, 27 20" fill="none"
         stroke={accent} strokeWidth="2.6" strokeLinecap="round" />
     </svg>
+  );
+}
+
+function Nav({ accent, onCta }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 32);
+      setHidden(y > 280 && y > lastY.current + 4);
+      lastY.current = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <header className={'nav' + (scrolled ? ' nav-stuck' : '') + (hidden ? ' nav-hidden' : '')}>
+      <div className="nav-inner">
+        <a className="brand" href="/" aria-label="The Modern_dev · home">
+          <Logo accent={accent} />
+          <span className="mark">The Modern<span style={{ color: accent }}>_</span>dev</span>
+        </a>
+        <nav className="nav-links" aria-label="Section navigation">
+          <a href="#mission">Why</a>
+          <a href="#schedule">Schedule</a>
+          <a href="#curriculum">Curriculum</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <button
+          type="button"
+          className="nav-cta"
+          onClick={onCta}
+          style={{ background: accent }}
+        >
+          Save a seat
+        </button>
+      </div>
+    </header>
+  );
+}
+
+function Footer({ accent }) {
+  return (
+    <footer className="footer-x">
+      <div className="footer-top">
+        <div className="footer-brand">
+          <a className="brand" href="/" aria-label="The Modern_dev · home">
+            <Logo accent={accent} />
+            <span className="mark">The Modern<span style={{ color: accent }}>_</span>dev</span>
+          </a>
+          <p className="footer-tag">A small class. Code with AI, from zero.</p>
+        </div>
+        <div className="footer-cols">
+          <div className="footer-col">
+            <div className="footer-h">Class</div>
+            <a href="#mission">Why</a>
+            <a href="#schedule">Schedule</a>
+            <a href="#curriculum">Curriculum</a>
+            <a href="#faq">FAQ</a>
+          </div>
+          <div className="footer-col">
+            <div className="footer-h">Reach me</div>
+            <a href="mailto:cyber@themodern.dev">cyber@themodern.dev</a>
+            <a href="https://t.me/the_modern_dev" target="_blank" rel="noopener noreferrer">@the_modern_dev</a>
+          </div>
+          <div className="footer-col">
+            <div className="footer-h">Legal</div>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/code-of-conduct">Code of conduct</a>
+          </div>
+        </div>
+      </div>
+      <div className="footer-bot">
+        <span>© {new Date().getUTCFullYear()} The Modern_dev</span>
+        <span className="footer-by">
+          Made with <span className="footer-heart" style={{ color: accent }}><IconHeart /></span> for beginners.
+        </span>
+      </div>
+    </footer>
   );
 }
 
@@ -311,6 +407,13 @@ export default function App() {
   const [seatNo, setSeatNo] = useState(null);
   const [submitError, setSubmitError] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  // Preloader: show on first load only. sessionStorage means a page refresh
+  // during a single tab session skips it, so devs and back-button users don't
+  // wait 1.5s twice.
+  const [showPreloader, setShowPreloader] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !sessionStorage.getItem('themodern_preloaded');
+  });
 
   useEffect(() => { document.documentElement.style.setProperty('--accent', accent); }, [accent]);
 
@@ -401,18 +504,23 @@ export default function App() {
   const pct = Math.round((taken / TOTAL_SEATS) * 100);
 
   return (
-    <div className="page">
-      <div className="grain" />
+    <>
+      {showPreloader && (
+        <Preloader
+          accent={accent}
+          onDone={() => {
+            sessionStorage.setItem('themodern_preloaded', '1');
+            setShowPreloader(false);
+          }}
+        />
+      )}
+      <ScrollProgress accent={accent} />
+      <CustomCursor accent={accent} />
+      <Nav accent={accent} onCta={openModal} />
+      <div className="page">
+        <div className="grain" />
 
-      <header className="masthead">
-        <a className="brand" href="/" aria-label="The Modern_dev · home">
-          <Logo accent={accent} />
-          <span className="mark">The Modern<span style={{ color: accent }}>_</span>dev</span>
-        </a>
-        <span className="mast-right">a small class</span>
-      </header>
-
-      <main className="content">
+        <main className="content">
         <div className="hero-grid">
           <section className="hero">
             <Enter>
@@ -466,6 +574,8 @@ export default function App() {
 
         <Mission accent={accent} />
 
+        <Marquee items={MARQUEE_ITEMS} speed={42} />
+
         <Schedule accent={accent} />
 
         <Curriculum />
@@ -487,12 +597,10 @@ export default function App() {
           </button>
           <span className="cta-note">takes 30 seconds</span>
         </Reveal>
-      </main>
+        </main>
 
-      <footer className="footer">
-        <div className="foot-mark">The Modern<span style={{ color: accent }}>_</span>dev</div>
-        <div className="foot-handle">@the_modern_dev</div>
-      </footer>
+        <Footer accent={accent} />
+      </div>
 
       {modalOpen && (
         <div
@@ -567,6 +675,6 @@ export default function App() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
