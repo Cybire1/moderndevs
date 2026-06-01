@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import {
   Enter, Reveal, Magnetic, AnimatedCheck, useInView,
   Preloader, ScrollProgress, CustomCursor, Marquee, MaskLines, DotField,
@@ -301,6 +301,8 @@ const HOW_STEPS = [
     n: '01',
     t: 'Save a seat',
     d: "Drop your name below. The list is small and I read every one. You'll know you're in within a day.",
+    note: 'takes 30 seconds',
+    anim: 'nod',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -312,7 +314,9 @@ const HOW_STEPS = [
   {
     n: '02',
     t: 'Build live, every week',
-    d: "We pick something real and make it together — with AI as the pair we're all learning from. Ask anything; there are no dumb questions.",
+    d: "We pick something real and make it together, with AI as the pair we're all learning from. Ask anything; there are no dumb questions.",
+    note: 'live every Sunday',
+    anim: 'pulse',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="16 18 22 12 16 6" />
@@ -324,6 +328,8 @@ const HOW_STEPS = [
     n: '03',
     t: 'Ship it and share',
     d: "You'll have something built, online, and yours. Post it, show your friends, put it in your portfolio. Repeat.",
+    note: 'your portfolio, expanded',
+    anim: 'lift',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
@@ -334,13 +340,41 @@ const HOW_STEPS = [
   },
 ];
 
-function HowItWorks() {
+function HowArrow({ accent }) {
+  return (
+    <svg className="how-arrow-svg" viewBox="0 0 64 36" fill="none" aria-hidden="true">
+      <path
+        d="M3 18 C 16 6, 32 30, 46 16"
+        stroke={accent}
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M40 11 L 48 17 L 41 23"
+        stroke={accent}
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+function HowItWorks({ accent }) {
   return (
     <section className="section how-section" id="how">
-      <div className="section-head">
+      <div className="how-section-bg" aria-hidden="true" />
+      <div className="how-head">
         <Reveal><div className="sec-label">How it works</div></Reveal>
         <Reveal delay={60}>
-          <h2 className="h2">Three steps. No platform tax.</h2>
+          <h2 className="h2">
+            <span className="underline-wrap">
+              Three steps
+              <Marker accent={accent} />
+            </span>.<br />
+            No platform tax.
+          </h2>
         </Reveal>
         <Reveal delay={120}>
           <p className="how-lede">
@@ -351,12 +385,28 @@ function HowItWorks() {
       </div>
       <div className="how-steps">
         {HOW_STEPS.map((s, i) => (
-          <Reveal key={s.n} delay={i * 80} className="how-step">
-            <div className="how-step-no">STEP {s.n}</div>
-            <div className="how-step-ic">{s.icon}</div>
-            <h3 className="how-step-t">{s.t}</h3>
-            <p className="how-step-d">{s.d}</p>
-          </Reveal>
+          <Fragment key={s.n}>
+            <Reveal delay={i * 110} className={`how-step how-step-${s.anim}`}>
+              <span className="how-bg-num" aria-hidden="true">{s.n}</span>
+              <div className="how-step-inner">
+                <div className="how-step-head">
+                  <div className="how-step-no">STEP {s.n}</div>
+                  <div className="how-step-ic">{s.icon}</div>
+                </div>
+                <h3 className="how-step-t">{s.t}</h3>
+                <p className="how-step-d">{s.d}</p>
+                <div className="how-step-note">
+                  <span className="how-step-arrow">→</span>
+                  <span>{s.note}</span>
+                </div>
+              </div>
+            </Reveal>
+            {i < HOW_STEPS.length - 1 && (
+              <Reveal delay={i * 110 + 200} className="how-arrow">
+                <HowArrow accent={accent} />
+              </Reveal>
+            )}
+          </Fragment>
         ))}
       </div>
     </section>
@@ -772,7 +822,7 @@ export default function App() {
 
         <Schedule accent={accent} />
 
-        <HowItWorks />
+        <HowItWorks accent={accent} />
 
         <Curriculum />
 
