@@ -4,6 +4,7 @@ import {
   Preloader, ScrollProgress, CustomCursor, Marquee, MaskLines, DotField,
   HorizontalPin,
 } from './fx.jsx';
+import PromptDemo from './Demo.jsx';
 import {
   IconCalendar, IconClock, IconUsers, IconSparkle, IconRobot, IconBolt,
   IconChat, IconCode, IconArrowRight, IconChevronDown, IconCheck, IconHeart,
@@ -765,6 +766,8 @@ export default function App() {
         <Mission accent={accent} />
 
         <Marquee items={MARQUEE_ITEMS} speed={42} />
+
+        <PromptDemo accent={accent} />
 
         <Schedule accent={accent} />
 
