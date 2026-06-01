@@ -33,7 +33,10 @@ button { font-family: inherit; }
 }
 
 @media (min-width: 720px) {
-  .page { padding: 56px 40px 60px; max-width: 880px; }
+  .page { padding: 56px 40px 60px; max-width: 1080px; }
+}
+@media (min-width: 1200px) {
+  .page { padding: 64px 56px 80px; max-width: 1180px; }
 }
 
 /* paper grain */
@@ -85,12 +88,15 @@ button { font-family: inherit; }
 .nav-hidden { transform: translateY(-100%); }
 
 .nav-inner {
-  max-width: 880px;
+  max-width: 1080px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+@media (min-width: 1200px) {
+  .nav-inner { max-width: 1180px; }
 }
 
 .brand {

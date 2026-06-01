@@ -696,16 +696,17 @@ export default function App() {
                 <div className="kicker">FREE · LIVE COHORT · BEGINNERS WELCOME</div>
               </Enter>
               <h1 className="h1">
-                <MaskLines lines={['Come build', 'with me.']} delay={120} stagger={120} />
                 <MaskLines
                   lines={[
+                    'Come build',
                     <span key="rl" className="underline-wrap">
                       robots&nbsp;&amp;&nbsp;AI
                       <Marker accent={accent} />
                     </span>,
+                    'with me.',
                   ]}
-                  delay={360}
-                  className="h1-mark"
+                  delay={120}
+                  stagger={120}
                 />
               </h1>
               <Enter delay={460}>
