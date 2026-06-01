@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import {
-  Enter, Reveal, Magnetic, AnimatedCheck, useInView,
+  Enter, Reveal, Magnetic, AnimatedCheck, useInView, useCountUp,
   Preloader, ScrollProgress, CustomCursor, Marquee, MaskLines, DotField,
   HorizontalPin,
 } from './fx.jsx';
@@ -587,29 +587,67 @@ function Showcase({ accent }) {
   );
 }
 
-function About() {
+function About({ accent }) {
   return (
     <section className="section about-section" id="about">
       <div className="about-grid">
         <Reveal className="about-portrait">
-          <div className="about-photo">
-            <img src="/cyber.jpg" alt="Cyber" loading="lazy" />
+          <div className="about-portrait-wrap">
+            <svg className="about-brush" viewBox="0 0 320 320" aria-hidden="true">
+              <path
+                d="M40 200 C 30 120, 90 30, 200 30 C 290 30, 310 110, 290 200 C 270 290, 180 310, 100 290"
+                fill="none"
+                stroke={accent}
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeDasharray="0.4 7"
+                opacity="0.5"
+              />
+            </svg>
+            <div className="about-photo">
+              <img src="/cyber.jpg" alt="Cyber" loading="lazy" />
+            </div>
+            <div className="about-badge">
+              <span className="about-badge-l">Founder</span>
+              <span className="about-badge-r">Cyber</span>
+            </div>
           </div>
         </Reveal>
         <Reveal delay={90} className="about-body">
           <div className="sec-label">Why I do this</div>
+          <h2 className="h2 about-h">
+            I'm doing it{' '}
+            <span className="underline-wrap">
+              for free
+              <Marker accent={accent} />
+            </span>.
+          </h2>
           <p className="about-first">
-            When I started, everything felt locked behind a paywall, a degree,
-            or a wall of jargon. AI changed that overnight. Almost nobody is
-            teaching people how to actually use it to build.
+            <span className="about-drop">W</span>hen I started, everything felt
+            locked behind a paywall, a degree, or a wall of jargon. AI changed
+            that overnight. Almost nobody is teaching people how to actually
+            use it to build.
           </p>
+          <figure className="about-quote">
+            <blockquote>
+              "If you can send a message,{' '}
+              <span className="underline-wrap">
+                you can build something
+                <Marker accent={accent} />
+              </span>."
+            </blockquote>
+          </figure>
           <p>
-            So I'm doing it, for free. The Modern_dev exists to bring the bar
-            <em> down</em> for people learning to code, not up. If you can send
-            a message, you can build something. I'll show you how.
+            So that's what The Modern_dev is. It exists to bring the bar
+            <em> down</em> for people learning to code, not up. I'll show you
+            how.
           </p>
           <div className="about-sign">
-            Cyber<small>Founder, The Modern_dev</small>
+            <span className="about-sign-mark" style={{ borderColor: accent }}>C.</span>
+            <div className="about-sign-meta">
+              <span className="about-sign-name">Cyber</span>
+              <small>Founder, The Modern_dev</small>
+            </div>
           </div>
         </Reveal>
       </div>
@@ -617,25 +655,87 @@ function About() {
   );
 }
 
+function CountNum({ n }) {
+  const [ref, v] = useCountUp(n);
+  return <span ref={ref}>{v}</span>;
+}
+
 function StatsBand() {
   return (
     <section className="band">
       <div className="band-inner">
-        <Reveal className="band-stat">
-          <div className="band-n">{COHORT_WEEKS}<span className="band-suffix"> wks</span></div>
-          <div className="band-l">start to ship something yours</div>
+        <Reveal className="band-eyebrow">
+          <span className="band-eyebrow-line" />
+          <span>By the numbers</span>
+          <span className="band-eyebrow-line" />
         </Reveal>
-        <Reveal className="band-stat" delay={70}>
-          <div className="band-n">{TOTAL_SEATS}</div>
-          <div className="band-l">seats — small on purpose</div>
+        <div className="band-grid">
+          <Reveal className="band-stat band-stat-feature">
+            <div className="band-n">
+              0<span className="band-arrow">→</span>1
+            </div>
+            <div className="band-l">where most builders here started.</div>
+          </Reveal>
+          <Reveal className="band-stat" delay={120}>
+            <div className="band-n"><CountNum n={COHORT_WEEKS} /><span className="band-suffix">wks</span></div>
+            <div className="band-l">start to ship something yours.</div>
+          </Reveal>
+          <Reveal className="band-stat" delay={190}>
+            <div className="band-n"><CountNum n={TOTAL_SEATS} /></div>
+            <div className="band-l">seats. Small on purpose.</div>
+          </Reveal>
+          <Reveal className="band-stat" delay={260}>
+            <div className="band-n">100<span className="band-suffix">%</span></div>
+            <div className="band-l">free. No catch. Ever.</div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ClosingCta({ accent, onCta, seatsLeft }) {
+  const daysAway = Math.max(0, Math.ceil((COHORT_DATE.getTime() - Date.now()) / 86400000));
+  return (
+    <section className="closing-cta">
+      <div className="closing-bg" aria-hidden="true">
+        <span className="closing-dot closing-dot-1" />
+        <span className="closing-dot closing-dot-2" />
+        <span className="closing-dot closing-dot-3" />
+      </div>
+      <div className="closing-inner">
+        <Reveal className="closing-eyebrow-wrap">
+          <div className="closing-eyebrow">
+            <span className="closing-eyebrow-pulse" style={{ background: accent }} />
+            {seatsLeft > 0 ? `${seatsLeft} seat${seatsLeft === 1 ? '' : 's'} still open` : 'Cohort is full'}
+          </div>
         </Reveal>
-        <Reveal className="band-stat" delay={140}>
-          <div className="band-n">100<span className="band-suffix">%</span></div>
-          <div className="band-l">free, no catch, ever</div>
+        <Reveal delay={70}>
+          <h2 className="closing-h">
+            Build the thing you've been{' '}
+            <span className="underline-wrap">
+              waiting to build
+              <Marker accent={accent} />
+            </span>.
+          </h2>
         </Reveal>
-        <Reveal className="band-stat" delay={210}>
-          <div className="band-n">0<span className="band-suffix">→1</span></div>
-          <div className="band-l">where most builders here start</div>
+        <Reveal delay={140} className="closing-row">
+          <Magnetic strength={0.25} style={{ display: 'inline-block' }}>
+            <button
+              type="button"
+              className="cta closing-btn"
+              style={{ background: accent }}
+              onClick={onCta}
+            >
+              Save me a seat <span className="arr">→</span>
+            </button>
+          </Magnetic>
+          <div className="closing-note">
+            <div>It takes 30 seconds.</div>
+            {daysAway > 0 && (
+              <div className="closing-note-sub">Cohort starts in {daysAway} {daysAway === 1 ? 'day' : 'days'}.</div>
+            )}
+          </div>
         </Reveal>
       </div>
     </section>
@@ -692,15 +792,28 @@ function Schedule({ accent }) {
 function Seats({ accent, taken, total, pct, left }) {
   const [ref, inView] = useInView();
   return (
-    <div ref={ref}>
+    <div ref={ref} className="seats">
       <div className="seat-top">
         <span className="seat-label">The room's filling up</span>
         <span className="seat-count" style={{ color: accent }}>{left} seats left</span>
       </div>
-      <div className="seat-track">
-        <div className="seat-fill" style={{ width: (inView ? pct : 0) + '%' }} />
+      <div className="seat-grid" aria-hidden="true">
+        {Array.from({ length: total }).map((_, i) => (
+          <span
+            key={i}
+            className={'seat-dot' + (i < taken ? ' is-taken' : '')}
+            style={{ transitionDelay: inView ? (i * 22) + 'ms' : '0ms' }}
+          />
+        ))}
       </div>
-      <div className="seat-sub">{taken} of {total} taken</div>
+      <div className="seat-bottom">
+        <div className="seat-track" aria-hidden="true">
+          <div className="seat-fill" style={{ width: (inView ? pct : 0) + '%' }} />
+        </div>
+        <div className="seat-sub">
+          <strong>{taken}</strong> of {total} taken<span className="seat-sep">·</span><span className="seat-pct">{pct}% full</span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -966,7 +1079,7 @@ export default function App() {
 
         <Showcase accent={accent} />
 
-        <About />
+        <About accent={accent} />
 
         <Reveal className="section">
           <Seats accent={accent} taken={taken} total={TOTAL_SEATS} pct={pct} left={seatsLeft} />
@@ -974,17 +1087,7 @@ export default function App() {
 
         <FAQ />
 
-        <Reveal className="cta-bottom">
-          <button
-            type="button"
-            className="cta"
-            style={{ background: accent }}
-            onClick={openModal}
-          >
-            Save me a seat <span className="arr">→</span>
-          </button>
-          <span className="cta-note">takes 30 seconds</span>
-        </Reveal>
+        <ClosingCta accent={accent} onCta={openModal} seatsLeft={seatsLeft} />
         </main>
 
         <Footer accent={accent} />
