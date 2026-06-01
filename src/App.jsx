@@ -170,22 +170,58 @@ function Footer({ accent }) {
   );
 }
 
+function Strike({ accent }) {
+  return (
+    <svg className="strike-svg" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true">
+      <path
+        d="M3 10 C 50 6, 110 13, 170 7 C 195 5, 210 9, 218 7"
+        fill="none"
+        stroke={accent}
+        strokeWidth="3.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function Mission({ accent }) {
   return (
     <section className="mission" id="mission">
+      <div className="mission-bg" aria-hidden="true">
+        <span className="mission-dot mission-dot-1" />
+        <span className="mission-dot mission-dot-2" />
+        <span className="mission-dot mission-dot-3" />
+      </div>
       <Reveal><div className="sec-label">Why this exists</div></Reveal>
-      <Reveal delay={50}>
-        <p className="mission-text">
-          Coding got gatekept by intimidation for too long. This class is{' '}
-          <span className="underline-wrap">
-            the opposite
+      <h2 className="mission-h">
+        <MaskLines
+          lines={[
+            <span key="1" className="mission-line">For too long, coding got{' '}
+              <span className="mission-strike">
+                gatekept by intimidation
+                <Strike accent={accent} />
+              </span>.
+            </span>,
+            <span key="2" className="mission-line">
+              This class is{' '}
+              <span className="underline-wrap">
+                the opposite
+                <Marker accent={accent} />
+              </span>.
+            </span>,
+          ]}
+          delay={100}
+          stagger={180}
+        />
+      </h2>
+      <Reveal delay={620}>
+        <p className="mission-tag">
+          Told it's not for you?{' '}
+          <span className="underline-wrap mission-cta-wrap">
+            Start here
             <Marker accent={accent} />
-          </span>.
-        </p>
-      </Reveal>
-      <Reveal delay={110}>
-        <p className="mission-sub">
-          If you've been told it's not for you, start here.
+          </span>
+          <span className="mission-tag-arrow">→</span>
         </p>
       </Reveal>
     </section>
@@ -413,39 +449,139 @@ function HowItWorks({ accent }) {
   );
 }
 
+function ThumbWebpage({ accent }) {
+  return (
+    <div className="pt-frame pt-webpage" aria-hidden="true">
+      <div className="pt-bar">
+        <span className="pt-dot" style={{ background: '#E5705B' }} />
+        <span className="pt-dot" style={{ background: '#E0B23C' }} />
+        <span className="pt-dot" style={{ background: '#5FCF80' }} />
+        <span className="pt-url">things-i-love.dev</span>
+      </div>
+      <div className="pt-stage">
+        <span className="pt-kicker" style={{ color: accent }}>A list of</span>
+        <span className="pt-h">things i love</span>
+        <span className="pt-row">
+          <span className="pt-card" />
+          <span className="pt-card" />
+          <span className="pt-card" />
+        </span>
+        <span className="pt-line" />
+        <span className="pt-line short" />
+      </div>
+    </div>
+  );
+}
+
+function ThumbScript({ accent }) {
+  const lines = ['$ summarise.py week.md', '> reading 7 notes…', '> 3 wins, 2 learnings, 1 sticky.', '> done in 12s', '$ █'];
+  return (
+    <div className="pt-frame pt-script" aria-hidden="true">
+      <div className="pt-bar pt-bar-dark">
+        <span className="pt-dot" style={{ background: '#5FCF80' }} />
+        <span className="pt-url" style={{ color: '#9A8F7B' }}>terminal · week-summary</span>
+      </div>
+      <div className="pt-stage pt-stage-dark">
+        {lines.map((l, i) => (
+          <span key={i} className="pt-code" style={{ color: i === 4 ? accent : i === 0 ? '#FBF8F1' : '#A99F8E' }}>
+            {l}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ThumbRobot({ accent }) {
+  return (
+    <div className="pt-frame pt-robot" aria-hidden="true">
+      <div className="pt-bar">
+        <span className="pt-dot" style={{ background: '#5FCF80' }} />
+        <span className="pt-url">reachy · live</span>
+      </div>
+      <div className="pt-stage pt-stage-center">
+        <svg className="pt-robot-svg" viewBox="0 0 120 100" fill="none" aria-hidden="true">
+          <rect x="32" y="22" width="56" height="46" rx="14" stroke={accent} strokeWidth="2.5" />
+          <circle cx="50" cy="42" r="4" fill={accent} />
+          <circle cx="70" cy="42" r="4" fill={accent} />
+          <path d="M48 56 Q 60 60 72 56" stroke={accent} strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <line x1="60" y1="14" x2="60" y2="22" stroke={accent} strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx="60" cy="12" r="2.5" fill={accent} />
+          <path className="pt-wave" d="M88 50 Q 100 32 108 38" stroke={accent} strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        </svg>
+        <span className="pt-caption">hi 👋</span>
+      </div>
+    </div>
+  );
+}
+
+function ThumbCalendar({ accent }) {
+  const cells = Array.from({ length: 21 }, (_, i) => i);
+  const today = 14;
+  return (
+    <div className="pt-frame pt-cal" aria-hidden="true">
+      <div className="pt-bar">
+        <span className="pt-dot" style={{ background: '#E0B23C' }} />
+        <span className="pt-url">today.live</span>
+      </div>
+      <div className="pt-stage">
+        <span className="pt-kicker" style={{ color: accent }}>One line</span>
+        <span className="pt-h">today</span>
+        <div className="pt-cal-grid">
+          {cells.map((c) => (
+            <span key={c} className={'pt-cal-cell' + (c === today ? ' is-today' : c < today ? ' is-past' : '')} />
+          ))}
+        </div>
+        <span className="pt-line" />
+      </div>
+    </div>
+  );
+}
+
 const PROJECTS = [
-  { id: 'p1', col: 'col-7', tag: 'Week 1', t: 'A live webpage about a thing I love', by: 'shipped by Ada — her first webpage, ever' },
-  { id: 'p2', col: 'col-5', tag: 'Week 2', t: 'A script that summarises my week from notes', by: 'shipped by Tunde' },
-  { id: 'p3', col: 'col-5', tag: 'Week 3', t: 'Reachy waves when I say hi', by: 'shipped by Mariam' },
-  { id: 'p4', col: 'col-7', tag: 'Week 4', t: 'A tiny calendar that summarises my day in one line', by: 'shipped by Sam — went from zero in 4 weeks' },
+  { id: 'p1', col: 'col-7', tag: 'Week 1', t: 'A live webpage about a thing I love', by: 'shipped by Ada, her first webpage, ever', Art: ThumbWebpage },
+  { id: 'p2', col: 'col-5', tag: 'Week 2', t: 'A script that summarises my week from notes', by: 'shipped by Tunde', Art: ThumbScript },
+  { id: 'p3', col: 'col-5', tag: 'Week 3', t: 'Reachy waves when I say hi', by: 'shipped by Mariam', Art: ThumbRobot },
+  { id: 'p4', col: 'col-7', tag: 'Week 4', t: 'A tiny calendar that summarises my day in one line', by: 'shipped by Sam, went from zero in 4 weeks', Art: ThumbCalendar },
 ];
 
-function Showcase() {
+function Showcase({ accent }) {
   return (
     <section className="section showcase-section" id="projects">
       <div className="section-head">
         <Reveal><div className="sec-label">Stuff that gets made</div></Reveal>
         <Reveal delay={60}>
-          <h2 className="h2">Real things, by real beginners.</h2>
+          <h2 className="h2">
+            Real things,{' '}
+            <span className="underline-wrap">
+              by real beginners
+              <Marker accent={accent} />
+            </span>.
+          </h2>
         </Reveal>
         <Reveal delay={120}>
           <p className="how-lede">
-            Every one of these was made by someone in a cohort — most of them
+            Every one of these was made by someone in a cohort. Most of them
             had never shipped anything before. Yours sits here next.
           </p>
         </Reveal>
       </div>
       <div className="showcase-grid">
-        {PROJECTS.map((p, i) => (
-          <Reveal key={p.id} className={'project ' + p.col} delay={(i % 2) * 80}>
-            <div className="project-thumb" aria-hidden="true" />
-            <div className="project-body">
-              <div className="project-tag">{p.tag}</div>
-              <div className="project-title">{p.t}</div>
-              <div className="project-by">{p.by}</div>
-            </div>
-          </Reveal>
-        ))}
+        {PROJECTS.map((p, i) => {
+          const Art = p.Art;
+          return (
+            <Reveal key={p.id} className={'project ' + p.col} delay={(i % 2) * 80}>
+              <div className="project-thumb">
+                <Art accent={accent} />
+              </div>
+              <div className="project-body">
+                <div className="project-tag">{p.tag}</div>
+                <div className="project-title">{p.t}</div>
+                <div className="project-by">{p.by}</div>
+              </div>
+            </Reveal>
+          );
+        })}
       </div>
     </section>
   );
@@ -828,7 +964,7 @@ export default function App() {
 
         <StatsBand />
 
-        <Showcase />
+        <Showcase accent={accent} />
 
         <About />
 

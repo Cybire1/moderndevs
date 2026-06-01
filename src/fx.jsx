@@ -108,6 +108,26 @@ export function MaskLines({ lines, className = '', lineClass = '', delay = 0, st
   );
 }
 
+/* ───────── useCountUp ───────── */
+export function useCountUp(target, { duration = 1500 } = {}) {
+  const [ref, inView] = useInView();
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    let raf, start;
+    const tick = (ts) => {
+      if (!start) start = ts;
+      const p = Math.min(1, (ts - start) / duration);
+      setVal(target * (1 - Math.pow(1 - p, 4)));
+      if (p < 1) raf = requestAnimationFrame(tick); else setVal(target);
+    };
+    raf = requestAnimationFrame(tick);
+    const settle = setTimeout(() => setVal(target), duration + 500);
+    return () => { cancelAnimationFrame(raf); clearTimeout(settle); };
+  }, [inView, target]);
+  return [ref, Math.round(val).toLocaleString()];
+}
+
 /* ───────── Magnetic ───────── */
 export function Magnetic({ children, strength = 0.25, style = {}, ...rest }) {
   const ref = useRef(null);
