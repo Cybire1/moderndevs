@@ -337,9 +337,12 @@ button { font-family: inherit; }
   .aside-text { font-size: 15px; max-width: 260px; }
 }
 
-/* sections: cap at hero-copy-column width on desktop so they don't go sparse */
+/* sections: cap inner width and center on wide desktops so content doesn't
+   sit at the left edge with empty space on the right. Mission and FAQ keep
+   tighter caps for readable line length; structured-content sections bump
+   wider to fill the page. */
 @media (min-width: 720px) {
-  .section, .cta-bottom { max-width: 580px; }
+  .section, .cta-bottom { max-width: 760px; margin-left: auto; margin-right: auto; }
 }
 
 .section { padding: 30px 0 6px; }
@@ -347,7 +350,8 @@ button { font-family: inherit; }
 /* mission */
 .mission {
   padding: 32px 0 4px;
-  max-width: 580px;
+  max-width: 760px;
+  margin: 0 auto;
 }
 .mission-text {
   font-size: 22px;
@@ -370,7 +374,7 @@ button { font-family: inherit; }
 }
 
 /* faq */
-.faq-section { padding-bottom: 0; max-width: 580px; }
+.faq-section { padding-bottom: 0; max-width: 760px; margin-left: auto; margin-right: auto; }
 .faq {
   display: flex;
   flex-direction: column;
@@ -446,8 +450,9 @@ button { font-family: inherit; }
 .schedule {
   padding: 30px 0 6px;
   max-width: 580px;
+  margin: 0 auto;
 }
-@media (min-width: 720px) { .schedule { max-width: 640px; } }
+@media (min-width: 720px) { .schedule { max-width: 900px; } }
 
 .schedule-grid {
   display: grid;
@@ -1235,7 +1240,7 @@ body.has-cursor [data-cursor] { cursor: none; }
 }
 
 /* ───────── how it works ───────── */
-.how-section { padding: 50px 0 12px; max-width: 880px; }
+.how-section { padding: 50px 0 12px; max-width: 1080px; margin-left: auto; margin-right: auto; }
 .how-lede {
   font-size: 16.5px;
   line-height: 1.55;
@@ -1363,7 +1368,7 @@ body.has-cursor [data-cursor] { cursor: none; }
 }
 
 /* ───────── showcase ───────── */
-.showcase-section { padding: 50px 0 12px; max-width: 880px; }
+.showcase-section { padding: 50px 0 12px; max-width: 1080px; margin-left: auto; margin-right: auto; }
 .showcase-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1428,7 +1433,7 @@ body.has-cursor [data-cursor] { cursor: none; }
 }
 
 /* ───────── about (big portrait + essay) ───────── */
-.about-section { padding: 50px 0 12px; max-width: 880px; }
+.about-section { padding: 50px 0 12px; max-width: 1080px; margin-left: auto; margin-right: auto; }
 .about-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1485,7 +1490,7 @@ body.has-cursor [data-cursor] { cursor: none; }
 }
 
 /* ───────── prompt demo (interactive build preview) ───────── */
-.demo-section { padding: 50px 0 12px; max-width: 880px; }
+.demo-section { padding: 50px 0 12px; max-width: 1080px; margin-left: auto; margin-right: auto; }
 .demo-shell {
   margin-top: 32px;
   background: var(--surface);
