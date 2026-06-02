@@ -88,41 +88,228 @@ function Logo({ accent }) {
   );
 }
 
+const NAV_LINKS = [
+  { href: '#mission', label: 'Why' },
+  { href: '#schedule', label: 'Schedule' },
+  { href: '#curriculum', label: 'Curriculum' },
+  { href: '#faq', label: 'FAQ' },
+];
+
+function NavMarker({ accent }) {
+  const d = 'M1 7 C 23 2, 50 2, 70 4.5 C 83 6, 93 5, 99 4';
+  return (
+    <svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">
+      <path
+        d={d}
+        fill="none"
+        stroke={accent}
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeOpacity="0.22"
+        transform="translate(0.6, 0.7)"
+      />
+      <path
+        d={d}
+        fill="none"
+        stroke={accent}
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function Nav({ accent, onCta }) {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(-1);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+  const [markerStyle, setMarkerStyle] = useState({ opacity: 0 });
+  const [menuOpen, setMenuOpen] = useState(false);
   const lastY = useRef(0);
+  const linksRef = useRef([]);
+
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 32);
-      setHidden(y > 280 && y > lastY.current + 4);
+      setHidden(!menuOpen && y > 280 && y > lastY.current + 4);
       lastY.current = y;
     };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, [menuOpen]);
+
+  // Body scroll lock + Esc to close while the mobile menu is open
+  useEffect(() => {
+    if (!menuOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY + 140;
+      let active = -1;
+      NAV_LINKS.forEach((link, i) => {
+        const el = document.getElementById(link.href.slice(1));
+        if (el && el.offsetTop <= y) active = i;
+      });
+      setActiveIdx(active);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
+
+  useEffect(() => {
+    const target = hoveredIdx !== null ? hoveredIdx : activeIdx;
+    if (target === -1) { setMarkerStyle({ opacity: 0 }); return; }
+    const link = linksRef.current[target];
+    if (!link) return;
+    setMarkerStyle({
+      transform: `translateX(${link.offsetLeft}px)`,
+      width: link.offsetWidth + 'px',
+      opacity: 1,
+    });
+  }, [hoveredIdx, activeIdx]);
+
+  const go = (e, href) => {
+    e.preventDefault();
+    setMenuOpen(false);
+    if (href === '#top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const el = document.querySelector(href);
+    if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+  };
+
   return (
     <header className={'nav' + (scrolled ? ' nav-stuck' : '') + (hidden ? ' nav-hidden' : '')}>
       <div className="nav-inner">
-        <a className="brand" href="/" aria-label="The Modern_dev · home">
-          <Logo accent={accent} />
-          <span className="mark">The Modern<span style={{ color: accent }}>_</span>dev</span>
-        </a>
-        <nav className="nav-links" aria-label="Section navigation">
-          <a href="#mission">Why</a>
-          <a href="#schedule">Schedule</a>
-          <a href="#curriculum">Curriculum</a>
-          <a href="#faq">FAQ</a>
-        </nav>
-        <button
-          type="button"
-          className="nav-cta"
-          onClick={onCta}
-          style={{ background: accent }}
+        <a
+          className="brand"
+          href="#top"
+          onClick={(e) => go(e, '#top')}
+          aria-label="The Modern_dev · home"
         >
-          Save a seat
-        </button>
+          <Logo accent={accent} />
+          <span className="brand-stack">
+            <span className="brand-mark">
+              The Modern
+              <span className="brand-us" style={{ color: accent }}>_</span>
+              dev
+            </span>
+            <span className="brand-stamp">
+              <span className="brand-stamp-dot" style={{ background: accent }} aria-hidden="true" />
+              Next cohort · Jul 20
+            </span>
+          </span>
+        </a>
+
+        <nav className="nav-links" aria-label="Section navigation">
+          {NAV_LINKS.map((link, i) => (
+            <a
+              key={link.href}
+              ref={(el) => (linksRef.current[i] = el)}
+              href={link.href}
+              data-active={activeIdx === i}
+              aria-current={activeIdx === i ? 'page' : undefined}
+              onMouseEnter={() => setHoveredIdx(i)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              onFocus={() => setHoveredIdx(i)}
+              onBlur={() => setHoveredIdx(null)}
+              onClick={(e) => go(e, link.href)}
+            >
+              {link.label}
+            </a>
+          ))}
+          <span className="nav-marker" style={markerStyle} aria-hidden="true">
+            <NavMarker accent={accent} />
+          </span>
+        </nav>
+
+        <div className="nav-end">
+          <div className="nav-cta-stack">
+            <button
+              type="button"
+              className="nav-cta"
+              onClick={onCta}
+              style={{ background: accent }}
+            >
+              <span className="nav-cta-label">Save a seat</span>
+              <span className="nav-cta-label-short">Save</span>
+              <span className="nav-cta-arrow" aria-hidden="true">
+                <svg viewBox="0 0 14 14" fill="none">
+                  <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </button>
+            <span className="nav-cta-sub">free, always</span>
+          </div>
+          <button
+            type="button"
+            className="nav-menu-btn"
+            data-open={menuOpen ? 'true' : 'false'}
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="nav-mobile-panel"
+          >
+            <span className="nav-menu-bars" aria-hidden="true">
+              <span /><span /><span />
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="nav-mobile-panel"
+        className="nav-mobile"
+        data-open={menuOpen ? 'true' : 'false'}
+        aria-hidden={!menuOpen}
+      >
+        <div className="nav-mobile-inner">
+          <nav className="nav-mobile-links" aria-label="Site navigation">
+            {NAV_LINKS.map((link, i) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => go(e, link.href)}
+                style={{ transitionDelay: menuOpen ? 80 + i * 70 + 'ms' : '0ms' }}
+              >
+                <span className="nav-mobile-n">{String(i + 1).padStart(2, '0')}</span>
+                <span className="nav-mobile-l">{link.label}</span>
+              </a>
+            ))}
+          </nav>
+          <div className="nav-mobile-foot">
+            <button
+              type="button"
+              className="cta nav-mobile-cta"
+              style={{ background: accent }}
+              onClick={() => { setMenuOpen(false); onCta(); }}
+            >
+              Save me a seat <span className="arr">→</span>
+            </button>
+            <span className="nav-mobile-stamp">
+              <span className="brand-stamp-dot" style={{ background: accent }} aria-hidden="true" />
+              Next cohort · Jul 20 · Always free
+            </span>
+          </div>
+        </div>
       </div>
     </header>
   );
