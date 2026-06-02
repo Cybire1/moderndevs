@@ -296,39 +296,47 @@ function FAQ() {
 
 const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
-function Curriculum() {
+function Curriculum({ accent }) {
   return (
-    <HorizontalPin className="curriculum-pin" id="curriculum">
-      <div className="cur-intro">
+    <>
+      <section className="section cur-head" id="curriculum">
         <Reveal><div className="sec-label">The curriculum</div></Reveal>
         <Reveal delay={60}>
-          <h2 className="h2">What we<br />actually build</h2>
+          <h2 className="h2">
+            What we{' '}
+            <span className="underline-wrap">
+              actually build
+              <Marker accent={accent} />
+            </span>.
+          </h2>
         </Reveal>
         <Reveal delay={120}>
           <p className="cur-intro-lede">
-            No filler. Every week ends with something you made and can show
-            people. Scroll →
+            No filler. Every week ends with something you made and can show people.
+            <span className="cur-scroll-hint">Scroll right →</span>
           </p>
         </Reveal>
-      </div>
-      {CURRICULUM.map((c, i) => {
-        const Icon = c.Icon;
-        return (
-          <article className="cur-card cur-card-pin" key={c.n}>
-            <div className="cur-card-head">
-              <div className="cur-num">{String(i + 1).padStart(2, '0')} / {String(CURRICULUM.length).padStart(2, '0')}</div>
-              <div className="cur-icon"><Icon /></div>
-            </div>
-            <h3 className="cur-title">{c.t}</h3>
-            <div className="cur-ship">
-              <span className="cur-ship-label">You'll ship</span>
-              <span className="cur-ship-text">{c.s}</span>
-            </div>
-            <p className="cur-desc">{c.d}</p>
-          </article>
-        );
-      })}
-    </HorizontalPin>
+      </section>
+      <HorizontalPin className="curriculum-pin">
+        {CURRICULUM.map((c, i) => {
+          const Icon = c.Icon;
+          return (
+            <article className="cur-card cur-card-pin" key={c.n}>
+              <div className="cur-card-head">
+                <div className="cur-num">{String(i + 1).padStart(2, '0')} / {String(CURRICULUM.length).padStart(2, '0')}</div>
+                <div className="cur-icon"><Icon /></div>
+              </div>
+              <h3 className="cur-title">{c.t}</h3>
+              <div className="cur-ship">
+                <span className="cur-ship-label">You'll ship</span>
+                <span className="cur-ship-text">{c.s}</span>
+              </div>
+              <p className="cur-desc">{c.d}</p>
+            </article>
+          );
+        })}
+      </HorizontalPin>
+    </>
   );
 }
 
@@ -1073,7 +1081,7 @@ export default function App() {
 
         <HowItWorks accent={accent} />
 
-        <Curriculum />
+        <Curriculum accent={accent} />
 
         <StatsBand />
 
