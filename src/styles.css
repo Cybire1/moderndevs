@@ -1392,7 +1392,7 @@ button { font-family: inherit; }
   gap: 28px;
   padding-bottom: 28px;
 }
-@media (min-width: 720px) {
+@media (min-width: 900px) {
   .footer-top {
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 2fr);
     gap: 48px;
@@ -1424,8 +1424,12 @@ button { font-family: inherit; }
   color: var(--ink);
   text-decoration: none;
   position: relative;
-  width: fit-content;
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   padding: 2px 0;
+  line-height: 1.35;
   transition: color .2s, transform .2s;
 }
 .footer-col a::after {
@@ -2011,8 +2015,11 @@ body.has-cursor [data-cursor] { cursor: none; }
   .band {
     margin-left: -40px;
     margin-right: -40px;
-    padding: 72px 40px;
+    padding: 60px 40px;
   }
+}
+@media (min-width: 1100px) {
+  .band { padding: 72px 48px; }
 }
 .band::before {
   content: '';
@@ -2052,9 +2059,12 @@ body.has-cursor [data-cursor] { cursor: none; }
 }
 @media (min-width: 720px) {
   .band-grid {
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-    gap: 48px 32px;
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    gap: 32px 28px;
   }
+}
+@media (min-width: 1100px) {
+  .band-grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 44px 32px; }
 }
 .band-stat { display: flex; flex-direction: column; gap: 10px; position: relative; }
 .band-stat:not(:last-child)::after {
@@ -2086,6 +2096,10 @@ body.has-cursor [data-cursor] { cursor: none; }
   color: var(--accent);
 }
 @media (min-width: 720px) {
+  .band-n { font-size: 52px; }
+  .band-stat-feature .band-n { font-size: 68px; }
+}
+@media (min-width: 1100px) {
   .band-n { font-size: 64px; }
   .band-stat-feature .band-n { font-size: 88px; }
 }
@@ -2819,6 +2833,37 @@ body.has-cursor [data-cursor] { cursor: none; }
   .form-title { font-size: 24px; }
 
   .modal-card { padding: 22px 20px 22px; }
+}
+
+/* Tablet zone (560–759): keep mostly desktop layout but stop the dark stats
+   band and full-bleed cards from dominating. The band sat at 64px feature
+   font with 72px vertical padding here — way too chunky for the content. */
+@media (min-width: 560px) and (max-width: 759px) {
+  .band {
+    margin: 44px -24px 6px;
+    padding: 52px 32px;
+    border-radius: 26px;
+  }
+  .band-n { font-size: 44px; }
+  .band-stat-feature .band-n { font-size: 60px; }
+  .band-l { font-size: 13.5px; }
+  .band-grid { gap: 32px 24px; }
+
+  .how-section {
+    padding: 48px 28px 32px;
+    border-radius: 26px;
+  }
+  .how-bg-num { font-size: 144px; }
+
+  .closing-cta {
+    margin: 48px -24px 0;
+    padding: 64px 32px 72px;
+    border-radius: 26px;
+  }
+  .closing-h { font-size: 40px; }
+
+  .about-portrait-wrap { max-width: 360px; }
+  .about-quote blockquote { font-size: 21px; }
 }
 
 /* Slim down further on really tight screens (<360px iPhone SE class) */
