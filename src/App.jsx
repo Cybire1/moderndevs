@@ -89,10 +89,10 @@ function Logo({ accent }) {
 }
 
 const NAV_LINKS = [
-  { href: '#mission', label: 'Why' },
-  { href: '#schedule', label: 'Schedule' },
-  { href: '#curriculum', label: 'Curriculum' },
-  { href: '#faq', label: 'FAQ' },
+  { href: '#mission', label: 'Why', meta: 'Where this comes from' },
+  { href: '#schedule', label: 'Schedule', meta: 'Jul 20 · 4 weeks' },
+  { href: '#curriculum', label: 'Curriculum', meta: 'Week by week' },
+  { href: '#faq', label: 'FAQ', meta: 'Honest answers' },
 ];
 
 function NavMarker({ accent }) {
@@ -197,7 +197,7 @@ function Nav({ accent, onCta }) {
   };
 
   return (
-    <header className={'nav' + (scrolled ? ' nav-stuck' : '') + (hidden ? ' nav-hidden' : '')}>
+    <header className={'nav' + (scrolled || menuOpen ? ' nav-stuck' : '') + (hidden ? ' nav-hidden' : '')}>
       <div className="nav-inner">
         <a
           className="brand"
@@ -282,32 +282,47 @@ function Nav({ accent, onCta }) {
         aria-hidden={!menuOpen}
       >
         <div className="nav-mobile-inner">
+          <span className="nav-mobile-kicker">
+            <span className="brand-stamp-dot" style={{ background: accent }} aria-hidden="true" />
+            Next cohort · Jul 20
+          </span>
           <nav className="nav-mobile-links" aria-label="Site navigation">
             {NAV_LINKS.map((link, i) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={(e) => go(e, link.href)}
-                style={{ transitionDelay: menuOpen ? 80 + i * 70 + 'ms' : '0ms' }}
+                className="nav-mobile-link"
+                data-active={activeIdx === i ? 'true' : 'false'}
+                style={{ '--i': i }}
               >
-                <span className="nav-mobile-n">{String(i + 1).padStart(2, '0')}</span>
-                <span className="nav-mobile-l">{link.label}</span>
+                <span className="nav-mobile-link-row">
+                  <span className="nav-mobile-link-label">{link.label}</span>
+                  <span className="nav-mobile-link-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 14 14" fill="none">
+                      <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </span>
+                <span className="nav-mobile-link-meta">{link.meta}</span>
               </a>
             ))}
           </nav>
           <div className="nav-mobile-foot">
             <button
               type="button"
-              className="cta nav-mobile-cta"
+              className="nav-mobile-cta"
               style={{ background: accent }}
               onClick={() => { setMenuOpen(false); onCta(); }}
             >
-              Save me a seat <span className="arr">→</span>
+              <span>Save me a seat</span>
+              <span className="nav-mobile-cta-arrow" aria-hidden="true">
+                <svg viewBox="0 0 14 14" fill="none">
+                  <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
             </button>
-            <span className="nav-mobile-stamp">
-              <span className="brand-stamp-dot" style={{ background: accent }} aria-hidden="true" />
-              Next cohort · Jul 20 · Always free
-            </span>
+            <span className="nav-mobile-sub">free, always · no catch</span>
           </div>
         </div>
       </div>
