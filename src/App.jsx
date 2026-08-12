@@ -11,14 +11,31 @@ import {
 } from './icons.jsx';
 
 const ACCENT = '#C0492B';
-const TOTAL_SEATS = 40;
-const BASELINE_TAKEN = 15;
 
-// PLACEHOLDER — edit when the real cohort date is set.
-const COHORT_DATE = new Date('2026-07-20T19:00:00Z');
+/* ---------------------------------------------------------------------------
+   COHORT CONFIG — the only block you edit between cohorts.
+
+   Capped at 15 on purpose. Small enough that everyone gets unblocked inside a
+   90-minute session, and it makes the seat count honest instead of decorative.
+
+   Saturday afternoon rather than Sunday evening: this is a Nigerian cohort, so
+   the time is stated in WAT, and an afternoon slot survives an evening power
+   cut where a 7pm one does not.
+   ------------------------------------------------------------------------ */
+const TOTAL_SEATS = 15;
+const BASELINE_TAKEN = 6;
+
+// CONFIRM THIS DATE before you announce it. 15:00 UTC is 4pm WAT.
+const COHORT_DATE = new Date('2026-08-22T15:00:00Z');
 const COHORT_WEEKS = 4;
 const COHORT_HOURS_PER_WEEK = 3;
-const COHORT_CADENCE = 'Sundays 7pm UTC';
+const COHORT_CADENCE = 'Saturdays 4pm WAT';
+
+// Derived, never hand-typed. Hardcoded dates are how a live site ends up
+// advertising a start date that has already passed.
+const COHORT_DATE_SHORT = COHORT_DATE.toLocaleDateString('en-GB', {
+  day: 'numeric', month: 'short', timeZone: 'UTC',
+});
 
 const MARQUEE_ITEMS = [
   'Code with AI',
@@ -58,7 +75,7 @@ const CURRICULUM = [
     n: 4, Icon: IconBolt,
     t: 'Build something yours',
     s: 'A small project of your own, end to end.',
-    d: "Pick a thing you wish existed. Pitch it Tuesday, ship it Sunday. We're in your corner all week.",
+    d: "Pick a thing you wish existed. Pitch it midweek, ship it Saturday. We're in your corner all week.",
   },
 ];
 
@@ -90,7 +107,7 @@ function Logo({ accent }) {
 
 const NAV_LINKS = [
   { href: '#mission', label: 'Why', meta: 'Where this comes from' },
-  { href: '#schedule', label: 'Schedule', meta: 'Jul 20 · 4 weeks' },
+  { href: '#schedule', label: 'Schedule', meta: `${COHORT_DATE_SHORT} · ${COHORT_WEEKS} weeks` },
   { href: '#curriculum', label: 'Curriculum', meta: 'Week by week' },
   { href: '#faq', label: 'FAQ', meta: 'Honest answers' },
 ];
@@ -214,7 +231,7 @@ function Nav({ accent, onCta }) {
             </span>
             <span className="brand-stamp">
               <span className="brand-stamp-dot" style={{ background: accent }} aria-hidden="true" />
-              Next cohort · Jul 20
+              Next cohort · {COHORT_DATE_SHORT}
             </span>
           </span>
         </a>
@@ -284,7 +301,7 @@ function Nav({ accent, onCta }) {
         <div className="nav-mobile-inner">
           <span className="nav-mobile-kicker">
             <span className="brand-stamp-dot" style={{ background: accent }} aria-hidden="true" />
-            Next cohort · Jul 20
+            Next cohort · {COHORT_DATE_SHORT}
           </span>
           <nav className="nav-mobile-links" aria-label="Site navigation">
             {NAV_LINKS.map((link, i) => (
@@ -445,7 +462,7 @@ const FAQ_DATA = [
   },
   {
     q: "What if I miss a live session?",
-    a: "Sessions are recorded and shared in the group. You can ask anything async — I'm there during the week, not just on Sundays.",
+    a: "Sessions are recorded and shared in the group. You can ask anything async — I'm there during the week, not just on Saturdays.",
   },
   {
     q: "What happens after the 4 weeks?",
@@ -561,7 +578,7 @@ const HOW_STEPS = [
     n: '02',
     t: 'Build live, every week',
     d: "We pick something real and make it together, with AI as the pair we're all learning from. Ask anything; there are no dumb questions.",
-    note: 'live every Sunday',
+    note: 'live every Saturday',
     anim: 'pulse',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
@@ -759,7 +776,7 @@ function Showcase({ accent }) {
   return (
     <section className="section showcase-section" id="projects">
       <div className="section-head">
-        <Reveal><div className="sec-label">Stuff that gets made</div></Reveal>
+        <Reveal><div className="sec-label">What you'll make</div></Reveal>
         <Reveal delay={60}>
           <h2 className="h2">
             Real things,{' '}
@@ -771,8 +788,12 @@ function Showcase({ accent }) {
         </Reveal>
         <Reveal delay={120}>
           <p className="how-lede">
-            Every one of these was made by someone in a cohort. Most of them
-            had never shipped anything before. Yours sits here next.
+            {/* FIRST cohort — these are the four builds, not past student
+                work. Claiming otherwise would be social proof we have not
+                earned. Swap for real projects, with names, after cohort one. */}
+            Nobody has run this cohort yet, so these are the four things you
+            will build. Not other people&rsquo;s work dressed up as proof.
+            After this one, the real projects go here with names on them.
           </p>
         </Reveal>
       </div>
@@ -793,6 +814,94 @@ function Showcase({ accent }) {
           );
         })}
       </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   WHAT IT COSTS / WHAT YOU NEED
+
+   The biggest gap on the old page. A free class still costs a Nigerian student
+   data and a Saturday afternoon, and not saying so reads as either naive or
+   evasive. Naming the real number in naira is what makes "free" believable.
+
+   It also corrects the page's one false implication: students do NOT use
+   Claude Code. Claude Code needs a paid plan and most Nigerian cards are
+   declined for recurring USD. Students use claude.ai free; Afeez demos the
+   paid tooling from his own account.
+   ------------------------------------------------------------------------ */
+const NEED = [
+  {
+    t: 'A laptop',
+    d: 'Any laptop that opens Chrome. Nothing to install, no admin rights, no minimum RAM. The whole class runs in a browser tab.',
+  },
+  {
+    t: 'Three free accounts',
+    d: 'claude.ai, Google, and GitHub. You make them the week before, not during the session. We send a checklist.',
+  },
+  {
+    t: 'About 3 hours a week',
+    d: '90 minutes live on Saturday, and roughly the same again during the week, whenever it suits you.',
+  },
+  {
+    t: 'Roughly \u20a675 of data per session',
+    d: 'Cameras stay off and we run audio plus screenshare only, which keeps a session near 300MB instead of 3GB. If your line drops we run a text lane in Telegram.',
+  },
+];
+
+const NOT_NEEDED = [
+  'A paid Claude plan. You will use the free tier, and it is enough.',
+  'Claude Code or Cursor. I demo the paid tools from my own machine so you can see them, but nothing in the class depends on them.',
+  'A Reachy Mini. The robot is mine. You write the code, I run it on camera.',
+  'A card. Nothing here will ever ask you for one. If a step does, stop and ask in the group.',
+  'Any prior coding. Not one line.',
+];
+
+function Requirements({ accent }) {
+  return (
+    <section className="section" id="cost">
+      <div className="section-head">
+        <Reveal><div className="sec-label">What it costs</div></Reveal>
+        <Reveal delay={60}>
+          <h2 className="h2">
+            Free means{' '}
+            <span className="underline-wrap">
+              actually free
+              <Marker accent={accent} />
+            </span>.
+          </h2>
+        </Reveal>
+        <Reveal delay={120}>
+          <p className="how-lede">
+            No tuition, no card, no upsell at the end. It still costs you a
+            Saturday afternoon and a bit of data, so here are both numbers
+            before you decide.
+          </p>
+        </Reveal>
+      </div>
+
+      <div className="need-grid">
+        {NEED.map((n, i) => (
+          <Reveal key={n.t} delay={i * 90} className="how-step">
+            <div className="how-step-inner">
+              <h3 className="how-step-t">{n.t}</h3>
+              <p className="how-step-d">{n.d}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+
+      <Reveal delay={160} className="cur-note" style={{ marginTop: 28 }}>
+        <div className="sec-label" style={{ marginBottom: 12 }}>What you don&rsquo;t need</div>
+        <ul className="need-not">
+          {NOT_NEEDED.map((x) => (
+            <li key={x}>
+              <span className="need-not-mark" style={{ color: accent }} aria-hidden="true">&mdash;</span>
+              <span>{x}</span>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
     </section>
   );
 }
@@ -961,8 +1070,14 @@ function Schedule({ accent }) {
       <Reveal delay={70}>
         <div className="schedule-grid">
           <div className="cal-tile" role="img"
-            aria-label={`Starts ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`}>
+            aria-label={`Starts ${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}, ${COHORT_CADENCE}`}>
             <span className="cal-strip" style={{ background: accent }} />
+            {/* The weekday matters more than the month here. "Aug 22" makes
+                someone go and check a calendar; "Saturday" answers the real
+                question, which is whether it clashes with their week. */}
+            <div className="cal-dow">
+              {d.toLocaleDateString('en-GB', { weekday: 'long', timeZone: 'UTC' })}
+            </div>
             <div className="cal-month">{MONTHS[d.getUTCMonth()]}</div>
             <div className="cal-day">{d.getUTCDate()}</div>
             <div className="cal-year">{d.getUTCFullYear()}</div>
@@ -1285,6 +1400,7 @@ export default function App() {
 
         <Curriculum accent={accent} />
 
+        <Requirements accent={accent} />
         <StatsBand />
 
         <Showcase accent={accent} />

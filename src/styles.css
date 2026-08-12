@@ -3000,3 +3000,61 @@ body.has-cursor [data-cursor] { cursor: none; }
   .band-stat-feature .band-n { font-size: 46px; }
   .closing-h { font-size: 28px; }
 }
+
+/* --------------------------------------------------------------------------
+   What you don't need — a plain list, deliberately unstyled compared with the
+   cards above it. The point is that it reads as a straight answer, not a
+   feature grid.
+   ----------------------------------------------------------------------- */
+.need-not {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.need-not li {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.need-not-mark {
+  flex: none;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .need-not li { font-size: 14.5px; }
+}
+
+/* Weekday sits above the month on the calendar tile — it is the first thing
+   someone actually needs in order to know if they can make it. */
+.cal-dow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.62;
+  margin-bottom: 2px;
+}
+
+/* Four equal cards. Deliberately NOT .how-steps — that grid is
+   1fr auto 1fr auto 1fr because it interleaves arrows between three steps,
+   so a fourth card lands in an `auto` track and collapses. */
+.need-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 700px) {
+  .need-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1040px) {
+  .need-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
